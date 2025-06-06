@@ -2,8 +2,8 @@
 
 Este repositório contém uma aplicação completa de **Loja Virtual**, composta por:
 
-- **Backend**: API RESTful em **Spring Boot** (Java 21), conectada a um banco de dados **MySQL**.
 - **Frontend**: SPA em **Angular 19**, empacotada e servida por **NGINX**.
+- **Backend**: API RESTful em **Spring Boot** (Java 21), conectada a um banco de dados **MySQL**.
 - **Banco de Dados**: **MySQL 8.0** (rodando em container Docker).
 
 Abaixo estão as instruções para configurar, executar e testar localmente toda a stack.
