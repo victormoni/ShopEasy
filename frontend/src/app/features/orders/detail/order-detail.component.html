@@ -1,0 +1,43 @@
+<div class="order-detail-container">
+  <h2>Detalhes do Pedido</h2>
+
+  <div *ngIf="loading" class="loading">Carregando detalhes do pedido...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="!loading && !error && order">
+    <div class="order-info">
+      <div><strong>ID do Pedido:</strong> {{ order.id }}</div>
+      <div>
+        <strong>Criado em:</strong>
+        {{ order.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}
+      </div>
+      <div>
+        <strong>Total (R$):</strong>
+        {{ order.total | number : "1.2-2" }}
+      </div>
+    </div>
+
+    <h3>Itens</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário (R$)</th>
+          <th>Subtotal (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>{{ item.productName }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.unitPrice | number : "1.2-2" }}</td>
+          <td>{{ getItemSubtotal(item) | number : "1.2-2" }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button" (click)="goBack()">« Voltar para Meus Pedidos</button>
+  </div>
+</div>

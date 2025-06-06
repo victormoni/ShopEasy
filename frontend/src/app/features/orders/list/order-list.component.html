@@ -1,0 +1,53 @@
+<div class="order-list-container">
+  <h2>Meus Pedidos</h2>
+
+  <div *ngIf="isLoggedIn" class="create-button">
+    <button routerLink="/orders/create">Criar Novo Pedido</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Carregando seus pedidos...</div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && orders.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Criado em</th>
+        <th>Total (R$)</th>
+        <th>Itens</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.id }}</td>
+        <td>{{ order.createdAt | date : "dd/MM/yyyy HH:mm" }}</td>
+        <td>{{ order.total | number : "1.2-2" }}</td>
+        <td>
+          {{ order.items.length }} item<span *ngIf="order.items.length > 1"
+            >s</span
+          >
+        </td>
+        <td>
+          <a [routerLink]="['/orders', order.id]">Ver detalhes</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && orders.length === 0" class="empty-list">
+    Você ainda não fez nenhum pedido.
+  </div>
+
+  <div *ngIf="!loading && !error && totalElements > size" class="pagination">
+    <button (click)="changePage(-1)" [disabled]="page === 0">← Anterior</button>
+    <span>Página {{ page + 1 }} de {{ totalPages }}</span>
+    <button
+      (click)="changePage(1)"
+      [disabled]="(page + 1) * size >= totalElements"
+    >
+      Próxima →
+    </button>
+  </div>
+</div>

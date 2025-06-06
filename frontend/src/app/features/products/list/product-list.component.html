@@ -1,0 +1,82 @@
+<div class="product-list-container">
+  <h2>Produtos</h2>
+
+  <div *ngIf="isAdmin" class="create-button">
+    <button routerLink="/products/create">Criar Novo Produto</button>
+  </div>
+
+  <!-- Seção de filtros (igual ao que já tinha) -->
+  <div class="filters-container">
+    <input
+      type="text"
+      placeholder="Pesquisar por nome"
+      [(ngModel)]="filterName"
+      (keyup.enter)="onSearch()"
+    />
+
+    <input
+      type="text"
+      placeholder="Categoria"
+      [(ngModel)]="filterCategory"
+      (keyup.enter)="onSearch()"
+    />
+
+    <input
+      type="number"
+      placeholder="Preço mínimo"
+      [(ngModel)]="filterMinPrice"
+      (keyup.enter)="onSearch()"
+      min="0"
+    />
+
+    <input
+      type="number"
+      placeholder="Preço máximo"
+      [(ngModel)]="filterMaxPrice"
+      (keyup.enter)="onSearch()"
+      min="0"
+    />
+
+    <button (click)="onSearch()">Pesquisar</button>
+    <button (click)="clearFilters()">Limpar</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Carregando produtos...</div>
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && products.length > 0">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Preço (R$)</th>
+        <th>Estoque</th>
+        <th>Categoria</th>
+        <th>Detalhes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let produto of products">
+        <td>{{ produto.name }}</td>
+        <td>{{ produto.price | number : "1.2-2" }}</td>
+        <td>{{ produto.stock }}</td>
+        <td>{{ produto.category }}</td>
+        <td>
+          <a [routerLink]="['/products', produto.id]">Ver Detalhes</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && products.length === 0" class="empty-list">
+    Nenhum produto encontrado para os filtros/página atual.
+  </div>
+
+  <!-- Paginação: só aparece se houver mais de uma página -->
+  <div *ngIf="!loading && !error && totalElements > size" class="pagination">
+    <button (click)="changePage(-1)" [disabled]="page === 0">← Anterior</button>
+    <span>Página {{ page + 1 }} de {{ totalPages }}</span>
+    <button (click)="changePage(1)" [disabled]="page + 1 >= totalPages">
+      Próxima →
+    </button>
+  </div>
+</div>

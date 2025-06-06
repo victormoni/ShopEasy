@@ -1,0 +1,46 @@
+.header-bar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-list,
+  .auth-list {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-list li,
+  .auth-list li {
+    margin-right: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+
+  a.active {
+    color: #007bff;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    color: #c00;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .logout-item {
+    margin-left: 1rem;
+  }
+}

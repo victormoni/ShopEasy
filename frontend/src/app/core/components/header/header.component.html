@@ -1,0 +1,26 @@
+<header class="header-bar">
+  <nav class="nav-container">
+    <ul class="nav-list">
+      <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+      <li *ngIf="loggedIn$ | async">
+        <a routerLink="/products" routerLinkActive="active">Produtos</a>
+      </li>
+      <li *ngIf="loggedIn$ | async">
+        <a routerLink="/orders" routerLinkActive="active">Pedidos</a>
+      </li>
+    </ul>
+
+    <ul class="auth-list">
+      <li *ngIf="!(loggedIn$ | async)">
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
+      <li *ngIf="!(loggedIn$ | async)">
+        <a routerLink="/register" routerLinkActive="active">Registrar</a>
+      </li>
+
+      <li *ngIf="loggedIn$ | async" class="logout-item">
+        <button type="button" (click)="logout()">Sair</button>
+      </li>
+    </ul>
+  </nav>
+</header>

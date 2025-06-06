@@ -1,0 +1,163 @@
+<div class="order-create-container">
+  <h2>Criar Pedido</h2>
+
+  <!-- Mensagem de erro geral -->
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <!-- 1) Filtros de exemplo (se quiser) -->
+  <div class="filters-container">
+    <input
+      type="text"
+      placeholder="Buscar por nome"
+      [(ngModel)]="filterName"
+      (keyup.enter)="onSearch()"
+    />
+    <input
+      type="text"
+      placeholder="Categoria"
+      [(ngModel)]="filterCategory"
+      (keyup.enter)="onSearch()"
+    />
+    <input
+      type="number"
+      placeholder="Preço mínimo"
+      [(ngModel)]="filterMinPrice"
+      (keyup.enter)="onSearch()"
+      min="0"
+    />
+    <input
+      type="number"
+      placeholder="Preço máximo"
+      [(ngModel)]="filterMaxPrice"
+      (keyup.enter)="onSearch()"
+      min="0"
+    />
+    <button (click)="onSearch()">Pesquisar</button>
+    <button (click)="clearFilters()">Limpar</button>
+  </div>
+
+  <!-- 2) Lista de produtos (paginada) -->
+  <section class="product-selection">
+    <h3>Produtos Disponíveis</h3>
+
+    <!-- Loading enquanto o async pipe aguarda -->
+    <div *ngIf="(produtos$ | async) === null" class="loading">
+      Carregando produtos...
+    </div>
+
+    <!-- Quando produtos$ emitir, pegamos o objeto inteiro PageProductResponse -->
+    <ng-container *ngIf="produtos$ | async as pageData">
+      <table *ngIf="pageData.content.length > 0; else noProducts">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Preço (R$)</th>
+            <th>Estoque</th>
+            <th>Quantidade</th>
+            <th>Adicionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let produto of pageData.content">
+            <td>{{ produto.name }}</td>
+            <td>{{ produto.price | number : "1.2-2" }}</td>
+            <td>{{ produto.stock }}</td>
+            <td>
+              <input
+                type="number"
+                #qtyInput
+                min="1"
+                [max]="produto.stock"
+                placeholder="0"
+                class="qty-input"
+              />
+            </td>
+            <td>
+              <button
+                type="button"
+                (click)="addToCart(produto, qtyInput)"
+                [disabled]="produto.stock === 0"
+              >
+                Adicionar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Se não houver produto na página atual -->
+      <ng-template #noProducts>
+        <div class="empty-list">Nenhum produto encontrado.</div>
+      </ng-template>
+
+      <!-- Paginação -->
+      <div *ngIf="pageData.totalPages > 1" class="pagination">
+        <button (click)="changePage(-1)" [disabled]="pageData.number === 0">
+          ← Anterior
+        </button>
+        <span
+          >Página {{ pageData.number + 1 }} de {{ pageData.totalPages }}</span
+        >
+        <button
+          (click)="changePage(1)"
+          [disabled]="pageData.number + 1 >= pageData.totalPages"
+        >
+          Próxima →
+        </button>
+      </div>
+    </ng-container>
+  </section>
+
+  <hr />
+
+  <!-- 3) Carrinho de Compras -->
+  <section class="cart-section" *ngIf="cart.length > 0; else emptyCartTpl">
+    <h3>Carrinho de Compras</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Preço Unitário (R$)</th>
+          <th>Subtotal (R$)</th>
+          <th>Remover</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cart">
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.product.price | number : "1.2-2" }}</td>
+          <td>{{ item.product.price * item.quantity | number : "1.2-2" }}</td>
+          <td>
+            <button type="button" (click)="removeFromCart(item.product.id)">
+              ✕
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 4) Total do carrinho -->
+    <div class="cart-total">
+      <strong>Total Geral:</strong>
+      R$ {{ getCartTotal() | number : "1.2-2" }}
+    </div>
+
+    <!-- 5) Botão para submeter o pedido -->
+    <button
+      type="button"
+      class="submit-btn"
+      (click)="submitOrder()"
+      [disabled]="loadingSubmit"
+    >
+      <ng-container *ngIf="!loadingSubmit">Criar Pedido</ng-container>
+      <ng-container *ngIf="loadingSubmit">Enviando...</ng-container>
+    </button>
+  </section>
+
+  <!-- Se o carrinho estiver vazio -->
+  <ng-template #emptyCartTpl>
+    <div class="empty-cart">O carrinho está vazio.</div>
+  </ng-template>
+</div>

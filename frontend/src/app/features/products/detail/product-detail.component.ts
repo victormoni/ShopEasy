@@ -1,0 +1,150 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../product.service';
+import { Product, ProductRequest } from '../product.model';
+import { AuthService } from '../../../features/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+
+@Component({
+  selector: 'app-product-detail',
+  templateUrl: './product-detail.component.html',
+  styleUrls: ['./product-detail.component.scss'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+})
+export class ProductDetailComponent implements OnInit, OnDestroy {
+  productId!: number;
+  product!: Product;
+  loading = false;
+  error: string | null = null;
+  isAdmin = false;
+
+  editMode = false;
+  productForm!: FormGroup;
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    // Verifica role ADMIN
+    const subRole = this.authService.isAdmin$.subscribe((isAdm) => {
+      this.isAdmin = isAdm;
+    });
+    this.subscriptions.push(subRole);
+
+    // Pega ID do produto
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
+    if (isNaN(this.productId)) {
+      this.error = 'ID de produto inválido.';
+      return;
+    }
+    this.loadProduct();
+
+    // Configura formulário (será preenchido em loadProduct)
+    this.productForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', Validators.maxLength(1000)],
+      price: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  loadProduct(): void {
+    this.loading = true;
+    this.error = null;
+    const sub = this.productService.getById(this.productId).subscribe({
+      next: (prod) => {
+        this.product = prod;
+
+        // Se for ADMIN, popula o formulário
+        if (this.isAdmin) {
+          this.productForm.patchValue({
+            name: prod.name,
+            description: prod.description || '',
+            price: prod.price,
+            stock: prod.stock,
+          });
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.error = 'Produto não encontrado.';
+        } else {
+          this.error = 'Erro ao carregar produto.';
+        }
+        this.loading = false;
+      },
+    });
+    this.subscriptions.push(sub);
+  }
+
+  enableEdit(): void {
+    this.editMode = true;
+    this.error = null;
+  }
+
+  cancelEdit(): void {
+    this.editMode = false;
+    // Opção: recarregar produto para desfazer alterações
+    this.loadProduct();
+  }
+
+  saveChanges(): void {
+    if (this.productForm.invalid) {
+      return;
+    }
+    this.loading = true;
+    this.error = null;
+    const dto: ProductRequest = this.productForm.value;
+
+    const sub = this.productService.update(this.productId, dto).subscribe({
+      next: (updatedProd) => {
+        this.product = updatedProd;
+        this.editMode = false;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Falha ao atualizar produto.';
+        this.loading = false;
+      },
+    });
+    this.subscriptions.push(sub);
+  }
+
+  deleteProduct(): void {
+    if (!confirm('Deseja realmente excluir este produto?')) {
+      return;
+    }
+    const sub = this.productService.delete(this.productId).subscribe({
+      next: () => {
+        this.router.navigate(['/products']);
+      },
+      error: () => {
+        this.error = 'Falha ao excluir produto.';
+      },
+    });
+    this.subscriptions.push(sub);
+  }
+
+  goBack(): void {
+    this.router.navigate(['/products']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
