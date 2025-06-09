@@ -18,7 +18,6 @@ export class JwtInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Não adiciona token para endpoints de autenticação
     if (
       req.url.endsWith('/api/auth/register') ||
       req.url.endsWith('/api/auth/login') ||
@@ -40,12 +39,9 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((err) => {
-        // Se receber 401, tenta refresh token uma vez
         if (err instanceof HttpErrorResponse && err.status === 401) {
-          // Chama método para refresh do token
           return from(this.authService.refreshToken()).pipe(
             switchMap((newToken) => {
-              // Se refresh bem-sucedido, clona a requisição original com novo token
               const retryReq = req.clone({
                 setHeaders: {
                   Authorization: `Bearer ${newToken}`,
@@ -54,7 +50,6 @@ export class JwtInterceptor implements HttpInterceptor {
               return next.handle(retryReq);
             }),
             catchError((refreshErr) => {
-              // Se também falhar no refresh, força logout
               this.authService.logout();
               return throwError(() => refreshErr);
             })

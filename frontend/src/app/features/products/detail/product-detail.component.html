@@ -2,7 +2,10 @@
   <h2>Detalhes do Produto</h2>
 
   <div *ngIf="loading" class="loading">Carregando detalhes do produto...</div>
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
 
   <div *ngIf="!loading && !error && product">
     <div *ngIf="!editMode">
@@ -26,6 +29,7 @@
 
     <div *ngIf="editMode && isAdmin" class="edit-form">
       <h3>Editar Produto</h3>
+
       <form [formGroup]="productForm">
         <div class="form-group">
           <label for="name">Nome:</label>
@@ -91,6 +95,7 @@
           >
             {{ loading ? "Salvando..." : "Salvar" }}
           </button>
+
           <button type="button" (click)="cancelEdit()" [disabled]="loading">
             Cancelar
           </button>

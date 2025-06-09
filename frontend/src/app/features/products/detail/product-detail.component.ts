@@ -39,13 +39,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Verifica role ADMIN
     const subRole = this.authService.isAdmin$.subscribe((isAdm) => {
       this.isAdmin = isAdm;
     });
     this.subscriptions.push(subRole);
 
-    // Pega ID do produto
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
     if (isNaN(this.productId)) {
       this.error = 'ID de produto inválido.';
@@ -53,7 +51,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
     this.loadProduct();
 
-    // Configura formulário (será preenchido em loadProduct)
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', Validators.maxLength(1000)],
@@ -69,7 +66,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       next: (prod) => {
         this.product = prod;
 
-        // Se for ADMIN, popula o formulário
         if (this.isAdmin) {
           this.productForm.patchValue({
             name: prod.name,
@@ -99,7 +95,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   cancelEdit(): void {
     this.editMode = false;
-    // Opção: recarregar produto para desfazer alterações
     this.loadProduct();
   }
 

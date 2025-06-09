@@ -1,6 +1,5 @@
 package com.victormoni.ecommerce.service.impl;
 
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -45,16 +44,12 @@ public class ProductServiceImpl implements ProductService {
             int page,
             int size) {
 
-        // 1) Monta Specification a partir dos parâmetros
         Specification<Product> spec = ProductSpecifications.filterBy(name, category, minPrice, maxPrice);
 
-        // 2) Cria um Pageable ordenando por “name”
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
 
-        // 3) Executa findAll(spec, pageable), que retorna Page<Product>
         Page<Product> pageResult = productRepository.findAll(spec, pageable);
 
-        // 4) Converte cada entidade Product em ProductResponse e empacota em Page<ProductResponse>
         List<ProductResponse> responseList = pageResult.getContent()
                 .stream()
                 .map(ProductMapper::toResponseDTO)
@@ -63,8 +58,7 @@ public class ProductServiceImpl implements ProductService {
         return new PageImpl<>(
                 responseList,
                 pageable,
-                pageResult.getTotalElements()
-        );
+                pageResult.getTotalElements());
 
     }
 

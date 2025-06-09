@@ -41,15 +41,10 @@ describe('ProductListComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    // Cria um SpyObj de ProductService com método list spy
     const spy = jasmine.createSpyObj('ProductService', ['list']);
 
     TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        FormsModule, 
-        HttpClientTestingModule // para [(ngModel)] nos filtros
-      ],
+      imports: [CommonModule, FormsModule, HttpClientTestingModule],
       providers: [{ provide: ProductService, useValue: spy }],
     }).compileComponents();
 
@@ -57,13 +52,11 @@ describe('ProductListComponent', () => {
       ProductService
     ) as jasmine.SpyObj<ProductService>;
 
-    // Faz o spy retornar um observable de dummyPage
     productServiceSpy.list.and.returnValue(of(dummyPage));
 
-    // Cria componente e detecta mudanças
     fixture = TestBed.createComponent(ProductListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // dispara ngOnInit e a chamada ao serviço
+    fixture.detectChanges();
   }));
 
   it('deve criar o componente', () => {
@@ -71,14 +64,13 @@ describe('ProductListComponent', () => {
   });
 
   it('deve chamar ProductService.list() no ngOnInit', () => {
-    // O spy foi configurado para retornar of(dummyPage). Verifica se foi chamado com parâmetros iniciais:
     expect(productServiceSpy.list).toHaveBeenCalledWith(
-      '', // filterName
-      '', // filterCategory
-      undefined, // filterMinPrice
-      undefined, // filterMaxPrice
-      0, // page
-      10 // size
+      '',
+      '',
+      undefined,
+      undefined,
+      0,
+      10
     );
   });
 
@@ -90,20 +82,17 @@ describe('ProductListComponent', () => {
   });
 
   it('deve exibir uma linha para cada produto na tabela', () => {
-    // Aguarda template renderizar após detectChanges
     fixture.detectChanges();
-    // Seleciona todas as linhas <tr> do <tbody>
+
     const rows = fixture.debugElement.queryAll(By.css('table tbody tr'));
     expect(rows.length).toBe(2);
 
-    // Verifica conteúdo da primeira célula da primeira linha
     const primeiraCelula = rows[0].query(By.css('td')).nativeElement
       .textContent;
     expect(primeiraCelula).toContain('Produto X');
   });
 
   it('ao chamar changePage, deve requisitar nova lista com page atualizada', () => {
-    // Ajusta o spy para retornar outra página simulada
     const newPage: PageProductResponse = {
       content: [
         {
@@ -121,11 +110,11 @@ describe('ProductListComponent', () => {
       number: 1,
       size: 10,
     };
-    // No primeiro ngOnInit, já foi chamado dummyPage. Agora resetamos o retorno:
+
     productServiceSpy.list.calls.reset();
     productServiceSpy.list.and.returnValue(of(newPage));
 
-    component.changePage(1); // passa de página 0 → 1
+    component.changePage(1);
     expect(component.page).toBe(1);
     expect(productServiceSpy.list).toHaveBeenCalledWith(
       '',
@@ -135,7 +124,7 @@ describe('ProductListComponent', () => {
       1,
       10
     );
-    // Simular detecção de mudanças e atualização do template:
+
     fixture.detectChanges();
     expect(component.products[0].name).toBe('Produto Z');
   });

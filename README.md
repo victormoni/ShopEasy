@@ -2,8 +2,8 @@
 
 Este repositório contém uma aplicação completa de **Loja Virtual**, composta por:
 
-- **Backend**: API RESTful em **Spring Boot** (Java 21), conectada a um banco de dados **MySQL**.
 - **Frontend**: SPA em **Angular 19**, empacotada e servida por **NGINX**.
+- **Backend**: API RESTful em **Spring Boot** (Java 21), conectada a um banco de dados **MySQL**.
 - **Banco de Dados**: **MySQL 8.0** (rodando em container Docker).
 
 Abaixo estão as instruções para configurar, executar e testar localmente toda a stack.
@@ -17,12 +17,12 @@ Abaixo estão as instruções para configurar, executar e testar localmente toda
 3. [Pré-requisitos](#pré-requisitos)
 4. [Estrutura de Pastas](#estrutura-de-pastas)
 5. [Configuração de Ambiente](#configuração-de-ambiente)
-   - 5.1. Variáveis de Ambiente do Backend
-   - 5.2. Configurações do Frontend
+   - 5.1. Configurações do Frontend
+   - 5.2. Variáveis de Ambiente do Backend
 6. [Executando com Docker Compose](#executando-com-docker-compose)
 7. [Instalação Manual (sem Docker)](#instalação-manual-sem-docker)
-   - 7.1. Backend (Spring Boot)
-   - 7.2. Frontend (Angular 19)
+   - 7.1. Frontend (Angular 19)
+   - 7.2. Backend (Spring Boot)
    - 7.3. Banco de Dados MySQL
 8. [Executando Testes](#executando-testes)
 9. [Endpoints Principais](#endpoints-principais)
@@ -34,18 +34,18 @@ Abaixo estão as instruções para configurar, executar e testar localmente toda
 
 A **Loja Virtual** é um sistema de e-commerce simplificado, dividido em duas partes:
 
-1. **Backend (API REST)**
+1. **Frontend (SPA em Angular 19)**
+
+   - Desenvolvido em Angular 19
+   - Consome a API Spring Boot para operações de login, cadastro e CRUD de produtos
+   - Empacotado em um container NGINX para servir o build de produção
+
+2. **Backend (API REST)**
 
    - Desenvolvido em Spring Boot 3.5.0
    - Autenticação e autorização via JWT
    - Endpoints para gerenciar usuários, autenticação, produtos e pedidos
    - Camada de persistência usando Spring Data JPA e MySQL
-
-2. **Frontend (SPA em Angular 19)**
-
-   - Desenvolvido em Angular 19
-   - Consome a API Spring Boot para operações de login, cadastro e CRUD de produtos
-   - Empacotado em um container NGINX para servir o build de produção
 
 3. **Banco de Dados (MySQL)**
    - Versão 8.0
@@ -56,6 +56,13 @@ A **Loja Virtual** é um sistema de e-commerce simplificado, dividido em duas pa
 
 ## Tecnologias Utilizadas
 
+- **Frontend**
+
+  - Angular 19
+  - TypeScript
+  - RxJS
+  - NGINX (versão Alpine) para servir o build
+
 - **Backend**
 
   - Java 21
@@ -63,13 +70,6 @@ A **Loja Virtual** é um sistema de e-commerce simplificado, dividido em duas pa
   - Hibernate ORM 6.6.15
   - MySQL Connector/J 8.0
   - JWT (JSON Web Tokens) para autenticação
-
-- **Frontend**
-
-  - Angular 19
-  - TypeScript
-  - RxJS
-  - NGINX (versão Alpine) para servir o build
 
 - **Infraestrutura & Build**
   - Docker 24.x

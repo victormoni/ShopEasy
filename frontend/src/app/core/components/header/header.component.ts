@@ -18,9 +18,7 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // isLoggedIn$ já é um BehaviorSubject->Observable em AuthService
     this.loggedIn$ = this.authService.isLoggedIn$;
-    // isAdmin$ agora é um BehaviorSubject->Observable em AuthService
     this.isAdmin$ = this.authService.isAdmin$;
   }
 

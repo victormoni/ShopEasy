@@ -1,5 +1,6 @@
 <section class="auth-container">
   <h2>Registro</h2>
+
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="username">Usuário:</label>
@@ -44,6 +45,7 @@
     <p *ngIf="error" class="error-message">{{ error }}</p>
     <p *ngIf="success" class="success-message">{{ success }}</p>
   </form>
+
   <p class="redirect">
     Já possui conta?
     <a routerLink="/login">Faça login</a>

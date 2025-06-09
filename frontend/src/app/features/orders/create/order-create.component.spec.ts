@@ -70,20 +70,16 @@ describe('OrderCreateComponent', () => {
     ) as jasmine.SpyObj<OrderService>;
     routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
-    // Agora o spy em lista retorna Observable<PageProductResponse>
     productServiceSpy.list.and.returnValue(of(dummyPage));
 
     fixture = TestBed.createComponent(OrderCreateComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // dispara ngOnInit → popula produtos$
+    fixture.detectChanges();
   });
 
   it('deve criar o componente e carregar produtos via produtos$', fakeAsync(() => {
-    // Como produtos$ é assíncrono, vamos esperar um tick
     tick();
     fixture.detectChanges();
-
-    // Verifica se list() foi chamado com parâmetros iniciais
     expect(productServiceSpy.list).toHaveBeenCalledWith(
       '',
       '',
@@ -93,16 +89,14 @@ describe('OrderCreateComponent', () => {
       10
     );
 
-    // Agora podemos extrair o último valor emitido por produtos$
     component.produtos$.subscribe((pageData) => {
       expect(pageData).toEqual(dummyPage);
     });
 
-    // Verifica se a tabela renderizou duas linhas
     fixture.detectChanges();
     const rows = fixture.debugElement.queryAll(By.css('table tbody tr'));
     expect(rows.length).toBe(2);
-    // A primeira célula da primeira linha deve conter “Item A”
+
     const primeiraCelula = rows[0].query(By.css('td')).nativeElement
       .textContent;
     expect(primeiraCelula).toContain('Item A');
@@ -124,7 +118,6 @@ describe('OrderCreateComponent', () => {
     const produto = dummyPage.content[0];
     component.cart = [{ product: produto, quantity: 1 }];
 
-    // **Agora precisamos retornar um OrderResponse completo**, não apenas {}:
     const mockOrderResponse = {
       id: 123,
       createdAt: '03/06/2025 15:00',
@@ -146,7 +139,6 @@ describe('OrderCreateComponent', () => {
     tick();
     fixture.detectChanges();
 
-    // Verifica que create() recebeu o request certo:
     expect(orderServiceSpy.create).toHaveBeenCalledWith({
       items: [{ productId: produto.id, quantity: 1 }],
     });
@@ -157,7 +149,6 @@ describe('OrderCreateComponent', () => {
     const produto = dummyPage.content[0];
     component.cart = [{ product: produto, quantity: 1 }];
 
-    // Simula falha: retorna Observable que dispara erro
     orderServiceSpy.create.and.returnValue(
       throwError({ error: { message: 'Falha' } })
     );

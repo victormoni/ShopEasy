@@ -33,67 +33,65 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class OrderIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtUtil jwtUtil;
+        @Autowired
+        private MockMvc mockMvc;
+        @Autowired
+        private ObjectMapper objectMapper;
+        @Autowired
+        private UserRepository userRepository;
+        @Autowired
+        private OrderRepository orderRepository;
+        @Autowired
+        private ProductRepository productRepository;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
+        @Autowired
+        private JwtUtil jwtUtil;
 
-    private String token;
+        private String token;
 
-    @SuppressWarnings("unused")
-    @BeforeEach
-    void setUp() {
+        @BeforeEach
+        void setUp() {
+                orderRepository.deleteAll();
+                productRepository.deleteAll();
+                userRepository.deleteAll();
 
-        orderRepository.deleteAll();
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+                User user = User.builder()
+                                .username("cliente1")
+                                .password(passwordEncoder.encode("1234"))
+                                .role(Role.USER)
+                                .build();
+                userRepository.save(user);
 
-        User user = User.builder()
-                .username("cliente1")
-                .password(passwordEncoder.encode("1234"))
-                .role(Role.USER)
-                .build();
-        userRepository.save(user);
+                Product product = Product.builder()
+                                .name("Camiseta Preta")
+                                .description("100% algodão")
+                                .price(BigDecimal.valueOf(50.00))
+                                .stock(100)
+                                .build();
+                productRepository.save(product);
 
-        Product product = Product.builder()
-                .name("Camiseta Preta")
-                .description("100% algodão")
-                .price(BigDecimal.valueOf(50.00))
-                .stock(100)
-                .build();
-        productRepository.save(product);
+                var userDetails = new CustomUserDetails(user, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                token = jwtUtil.generateToken(userDetails);
+        }
 
-        var userDetails = new CustomUserDetails(user, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        token = jwtUtil.generateToken(userDetails);
-    }
+        @Test
+        void shouldCreateOrderSuccessfully() throws Exception {
+                OrderItemRequest item = OrderItemRequest.builder()
+                                .productId(productRepository.findAll().get(0).getId())
+                                .quantity(2)
+                                .build();
 
-    @Test
-    void shouldCreateOrderSuccessfully() throws Exception {
-        OrderItemRequest item = OrderItemRequest.builder()
-                .productId(productRepository.findAll().get(0).getId())
-                .quantity(2)
-                .build();
+                OrderRequest orderRequest = OrderRequest.builder()
+                                .items(List.of(item))
+                                .build();
 
-        OrderRequest orderRequest = OrderRequest.builder()
-                .items(List.of(item))
-                .build();
-
-        mockMvc.perform(post("/api/orders")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(orderRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value(100.0))
-                .andExpect(jsonPath("$.items[0].quantity").value(2));
-    }
+                mockMvc.perform(post("/api/orders")
+                                .header("Authorization", "Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(orderRequest)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.total").value(100.0))
+                                .andExpect(jsonPath("$.items[0].quantity").value(2));
+        }
 }

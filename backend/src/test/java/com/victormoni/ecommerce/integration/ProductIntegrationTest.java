@@ -55,10 +55,8 @@ class ProductIntegrationTest {
 
     private String adminToken;
 
-    @SuppressWarnings("unused")
     @BeforeEach
     void setUp() {
-
         orderRepository.deleteAll();
         userRepository.deleteAll();
         productRepository.deleteAll();

@@ -10,18 +10,10 @@ describe('AuthGuard', () => {
   let routerMock: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    // Criamos um SpyObj sem métodos (segundo parâmetro),
-    // mas com a propriedade isLoggedIn$ (terceiro parâmetro é um objeto de getters).
-    const spyAuth = jasmine.createSpyObj(
-      'AuthService',
-      [], // não há métodos para spiar
-      {
-        // inicialmente, isLoggedIn$ emite true
-        isLoggedIn$: of(true),
-      }
-    );
+    const spyAuth = jasmine.createSpyObj('AuthService', [], {
+      isLoggedIn$: of(true),
+    });
 
-    // Spy do Router, apenas para parseUrl()
     const spyRouter = jasmine.createSpyObj('Router', ['parseUrl']);
 
     TestBed.configureTestingModule({
@@ -40,7 +32,6 @@ describe('AuthGuard', () => {
   });
 
   it('deve permitir ativação quando isLoggedIn$ emitir true', waitForAsync(() => {
-    // Configura isLoggedIn$ para emitir true
     authServiceMock.isLoggedIn$ = of(true);
 
     guard.canActivate(null as any, null as any).subscribe((result) => {
@@ -49,10 +40,8 @@ describe('AuthGuard', () => {
   }));
 
   it('deve redirecionar para /login quando isLoggedIn$ emitir false', waitForAsync(() => {
-    // Configura isLoggedIn$ para emitir false
     authServiceMock.isLoggedIn$ = of(false);
 
-    // Faz o parseUrl retornar um UrlTree fictício para '/login'
     const fakeTree = {} as UrlTree;
     routerMock.parseUrl.and.returnValue(fakeTree);
 

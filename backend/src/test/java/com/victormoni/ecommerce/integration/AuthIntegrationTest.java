@@ -31,94 +31,93 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class AuthIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        @Autowired
+        private MockMvc mockMvc;
+        @Autowired
+        private ObjectMapper objectMapper;
+        @Autowired
+        private UserRepository userRepository;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-    @SuppressWarnings("unused")
-    @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
+        @BeforeEach
+        void setUp() {
+                userRepository.deleteAll();
 
-        User admin = User.builder()
-                .username("adminUser")
-                .password(passwordEncoder.encode("1234"))
-                .role(Role.ADMIN)
-                .build();
-        userRepository.save(admin);
-    }
+                User admin = User.builder()
+                                .username("adminUser")
+                                .password(passwordEncoder.encode("1234"))
+                                .role(Role.ADMIN)
+                                .build();
+                userRepository.save(admin);
+        }
 
-    @Test
-    void shouldRegisterAndLoginSuccessfully() throws Exception {
+        @Test
+        void shouldRegisterAndLoginSuccessfully() throws Exception {
 
-        RegisterRequest register = new RegisterRequest();
-        register.setUsername("joao");
-        register.setPassword("senha123");
-        register.setRole("USER");
+                RegisterRequest register = new RegisterRequest();
+                register.setUsername("joao");
+                register.setPassword("senha123");
+                register.setRole("USER");
 
-        mockMvc.perform(post("/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(register)))
-                .andExpect(status().isOk());
+                mockMvc.perform(post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(register)))
+                                .andExpect(status().isOk());
 
-        LoginRequest login = new LoginRequest();
-        login.setUsername("joao");
-        login.setPassword("senha123");
+                LoginRequest login = new LoginRequest();
+                login.setUsername("joao");
+                login.setPassword("senha123");
 
-        mockMvc.perform(post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").exists())
-                .andExpect(jsonPath("$.refreshToken").exists());
-    }
+                mockMvc.perform(post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(login)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.accessToken").exists())
+                                .andExpect(jsonPath("$.refreshToken").exists());
+        }
 
-    @Test
-    void shouldFailLoginWithInvalidCredentials() throws Exception {
+        @Test
+        void shouldFailLoginWithInvalidCredentials() throws Exception {
 
-        LoginRequest login = new LoginRequest();
-        login.setUsername("invalido");
-        login.setPassword("naoExiste");
+                LoginRequest login = new LoginRequest();
+                login.setUsername("invalido");
+                login.setPassword("naoExiste");
 
-        mockMvc.perform(post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isUnauthorized());
-    }
+                mockMvc.perform(post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(login)))
+                                .andExpect(status().isUnauthorized());
+        }
 
-    @Test
-    void shouldReturnLoggedInUserDetails() throws Exception {
+        @Test
+        void shouldReturnLoggedInUserDetails() throws Exception {
 
-        User u = new User();
-        u.setUsername("maria");
-        u.setPassword(passwordEncoder.encode("abc123"));
-        u.setRole(Role.USER);
-        userRepository.save(u);
+                User u = new User();
+                u.setUsername("maria");
+                u.setPassword(passwordEncoder.encode("abc123"));
+                u.setRole(Role.USER);
+                userRepository.save(u);
 
-        LoginRequest login = new LoginRequest();
-        login.setUsername("maria");
-        login.setPassword("abc123");
-        String loginJson = objectMapper.writeValueAsString(login);
+                LoginRequest login = new LoginRequest();
+                login.setUsername("maria");
+                login.setPassword("abc123");
+                String loginJson = objectMapper.writeValueAsString(login);
 
-        String resp = mockMvc.perform(post("/api/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(loginJson))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                String resp = mockMvc.perform(post("/api/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(loginJson))
+                                .andExpect(status().isOk())
+                                .andReturn()
+                                .getResponse()
+                                .getContentAsString();
 
-        String accessToken = objectMapper.readTree(resp).get("accessToken").asText();
+                String accessToken = objectMapper.readTree(resp).get("accessToken").asText();
 
-        mockMvc.perform(get("/api/users/me")
-                .header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("maria"))
-                .andExpect(jsonPath("$.role").value("USER"));
-    }
+                mockMvc.perform(get("/api/users/me")
+                                .header("Authorization", "Bearer " + accessToken))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.username").value("maria"))
+                                .andExpect(jsonPath("$.role").value("USER"));
+        }
 }

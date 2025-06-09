@@ -49,8 +49,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Inclua aqui todas as origens que vão chamar a API em dev e prod
-        configuration.setAllowedOrigins(List.of("http://localhost:4200","http://localhost"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -63,36 +62,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(withDefaults())
-            .authorizeHttpRequests(authz -> authz
+                .csrf(csrf -> csrf.disable())
+                .cors(withDefaults())
+                .authorizeHttpRequests(authz -> authz
 
-                // 1) Login, Swagger e Docs abertos
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
 
-                // 2) Liberar leitura pública de produtos (GET)
-                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
-                .requestMatchers("/actuator/health").permitAll()   
-                    
-                // 3) Só ADMIN pode criar/atualizar/excluir produtos
-                .requestMatchers(HttpMethod.POST,   "/api/products/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT,    "/api/products/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                // 4) Rota /api/users/me exige autenticação
-                .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
+                        .requestMatchers("/api/**").authenticated()
 
-                // 5) Demais rotas de /api/users/** só para ADMIN
-                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        .anyRequest().denyAll())
 
-                // 6) Qualquer outra rota /api/** pede autenticação
-                .requestMatchers("/api/**").authenticated()
-
-                // 7) Fora de /api/**, negar tudo
-                .anyRequest().denyAll()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

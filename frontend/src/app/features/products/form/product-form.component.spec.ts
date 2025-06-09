@@ -39,7 +39,7 @@ describe('ProductFormComponent', () => {
 
     fixture = TestBed.createComponent(ProductFormComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // dispara ngOnInit
+    fixture.detectChanges();
   }));
 
   it('deve criar o componente', () => {

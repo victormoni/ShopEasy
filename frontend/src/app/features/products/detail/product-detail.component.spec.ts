@@ -32,19 +32,18 @@ describe('ProductDetailComponent (ajustado)', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    // 1) Spy de AuthService com isAdmin$ → true
     const authSpy = jasmine.createSpyObj('AuthService', [], {
       isAdmin$: of(true),
     });
-    // 2) Spy de ProductService
+
     const prodSpy = jasmine.createSpyObj('ProductService', [
       'getById',
       'update',
       'delete',
     ]);
-    // 3) Spy de Router
+
     const rtrSpy = jasmine.createSpyObj('Router', ['navigate']);
-    // 4) Stub de ActivatedRoute retorna id = '42'
+
     const defaultRouteStub = {
       snapshot: {
         paramMap: { get: (key: string) => (key === 'id' ? '42' : null) },
@@ -53,7 +52,6 @@ describe('ProductDetailComponent (ajustado)', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        // Importa o componente standalone
         ProductDetailComponent,
         CommonModule,
         ReactiveFormsModule,
@@ -73,31 +71,27 @@ describe('ProductDetailComponent (ajustado)', () => {
     ) as jasmine.SpyObj<ProductService>;
     routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
-    // Por padrão, getById(42) retorna mockProduct
     productServiceSpy.getById.and.returnValue(of(mockProduct));
   }));
 
-  // Cria o componente e aguarda ngOnInit → getById
   beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // dispara ngOnInit()
-    tick(); // aguarda subscribe de getById()
+    fixture.detectChanges();
+    tick();
   }));
 
   it('deve criar o componente e carregar produto', () => {
-    // ✅ productForm já existe porque detectChanges+tick foram chamados no beforeEach
     expect(component).toBeTruthy();
     expect(component.productId).toBe(42);
     expect(productServiceSpy.getById).toHaveBeenCalledWith(42);
     expect(component.product).toEqual(mockProduct);
     expect(component.loading).toBeFalse();
-    // Form foi inicializado no ngOnInit e preenchido
+
     expect(component.productForm.get('name')?.value).toBe(mockProduct.name);
   });
 
   it('ngOnInit com id inválido deve exibir erro e não chamar getById', fakeAsync(() => {
-    // Sobrescreve ActivatedRoute para id = 'abc'
     const routeStubInvalid = {
       snapshot: {
         paramMap: { get: (key: string) => (key === 'id' ? 'abc' : null) },
@@ -107,7 +101,6 @@ describe('ProductDetailComponent (ajustado)', () => {
       useValue: routeStubInvalid,
     });
 
-    // Reconstrói o componente para que ngOnInit seja executado novamente
     fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -118,13 +111,12 @@ describe('ProductDetailComponent (ajustado)', () => {
   }));
 
   it('loadProduct com erro 404 deve exibir mensagem "Produto não encontrado."', fakeAsync(() => {
-    // Ajusta productId e faz getById retornar erro 404
     component.productId = 99;
     productServiceSpy.getById.and.returnValue(throwError({ status: 404 }));
 
     component.loadProduct();
     tick();
-    // Form não é tocado aqui, então nenhum patchValue é chamado
+
     expect(component.error).toBe('Produto não encontrado.');
     expect(component.loading).toBeFalse();
   }));
@@ -137,7 +129,6 @@ describe('ProductDetailComponent (ajustado)', () => {
   });
 
   it('cancelEdit() deve desativar editMode e recarregar produto', fakeAsync(() => {
-    // Agora productForm existe (inicializado no beforeEach)
     component.productForm.patchValue({
       name: 'Outro',
       price: 0,
@@ -158,7 +149,7 @@ describe('ProductDetailComponent (ajustado)', () => {
 
   it('saveChanges() com sucesso deve atualizar product e sair de editMode', fakeAsync(() => {
     component.editMode = true;
-    // productForm já existe, então podemos setValue
+
     component.productForm.setValue({
       name: 'Alterado',
       description: 'Desc alterado',

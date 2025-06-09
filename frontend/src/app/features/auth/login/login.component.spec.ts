@@ -10,9 +10,8 @@ describe('HeaderComponent', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
-    // O spy não precisa de métodos, só de uma propriedade isLoggedIn$
     const spy = jasmine.createSpyObj('AuthService', [], {
-      isLoggedIn$: of(true), // retorna "true" para indicar usuário logado
+      isLoggedIn$: of(true),
     });
 
     await TestBed.configureTestingModule({
@@ -22,7 +21,7 @@ describe('HeaderComponent', () => {
     authServiceSpy = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // dispara ngOnInit → subscreve isLoggedIn$
+    fixture.detectChanges();
   });
 
   it('deve exibir botão de logout quando isLoggedIn$ emitir true', () => {

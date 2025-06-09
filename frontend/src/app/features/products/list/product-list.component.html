@@ -5,7 +5,6 @@
     <button routerLink="/products/create">Criar Novo Produto</button>
   </div>
 
-  <!-- Seção de filtros (igual ao que já tinha) -->
   <div class="filters-container">
     <input
       type="text"
@@ -71,7 +70,6 @@
     Nenhum produto encontrado para os filtros/página atual.
   </div>
 
-  <!-- Paginação: só aparece se houver mais de uma página -->
   <div *ngIf="!loading && !error && totalElements > size" class="pagination">
     <button (click)="changePage(-1)" [disabled]="page === 0">← Anterior</button>
     <span>Página {{ page + 1 }} de {{ totalPages }}</span>

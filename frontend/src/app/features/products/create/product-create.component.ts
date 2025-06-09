@@ -34,7 +34,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Verifica se usuário é ADMIN
     this.subscription = this.authService.isAdmin$.subscribe((isAdm) => {
       this.isAdmin = isAdm;
       if (!isAdm) {
@@ -42,7 +41,6 @@ export class ProductCreateComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Monta o formulário
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(1000)]],

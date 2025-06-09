@@ -1,7 +1,9 @@
 <div class="product-create-container">
   <h2>Cadastrar Novo Produto</h2>
 
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
 
   <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
@@ -61,6 +63,7 @@
       <button type="submit" [disabled]="productForm.invalid || loading">
         {{ loading ? "Salvando..." : "Salvar" }}
       </button>
+
       <button type="button" (click)="cancel()" [disabled]="loading">
         Cancelar
       </button>

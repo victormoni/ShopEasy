@@ -9,7 +9,6 @@ import com.victormoni.ecommerce.dto.request.OrderRequest;
 import com.victormoni.ecommerce.dto.response.OrderResponse;
 import com.victormoni.ecommerce.model.OrderStatus;
 import com.victormoni.ecommerce.service.OrderService;
-import com.victormoni.ecommerce.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -40,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
 @Tag(name = "Pedidos", description = "Operações de gerenciamento de pedidos")
-public class OrderController implements OrderApi{
+public class OrderController implements OrderApi {
 
     private final OrderService orderService;
 

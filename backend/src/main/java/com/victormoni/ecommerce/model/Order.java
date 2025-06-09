@@ -44,9 +44,7 @@ public class Order {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "order",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();
 
@@ -61,7 +59,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @SuppressWarnings("unused")
     @PrePersist
     void prePersist() {
         this.createdAt = LocalDateTime.now();

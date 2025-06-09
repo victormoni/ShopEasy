@@ -8,7 +8,7 @@ import { AuthService } from './features/auth/auth.service';
 @Component({
   selector: 'app-header',
   template: '',
-  standalone: true, // necessário para uso em imports
+  standalone: true,
 })
 class HeaderStubComponent {
   @Input() isAdmin!: boolean;

@@ -3,7 +3,9 @@
 
   <div *ngIf="loading" class="loading">Carregando detalhes do pedido...</div>
 
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
 
   <div *ngIf="!loading && !error && order">
     <div class="order-info">
@@ -19,6 +21,7 @@
     </div>
 
     <h3>Itens</h3>
+
     <table>
       <thead>
         <tr>

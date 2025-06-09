@@ -34,64 +34,54 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/products")
 public interface ProductApi {
 
-    @Operation(summary = "Listar todos os produtos", description = "Retorna todos os produtos cadastrados")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
-    @GetMapping
-    ResponseEntity<Page<ProductResponse>> list(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice,
-            int page,
-            int size);
+        @Operation(summary = "Listar todos os produtos", description = "Retorna todos os produtos cadastrados")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Não autorizado", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+        })
+        @GetMapping
+        ResponseEntity<Page<ProductResponse>> list(
+                        @RequestParam(required = false) String name,
+                        @RequestParam(required = false) String category,
+                        @RequestParam(required = false) BigDecimal minPrice,
+                        @RequestParam(required = false) BigDecimal maxPrice,
+                        int page,
+                        int size);
 
-    @Operation(summary = "Buscar produto por ID", description = "Retorna um produto específico pelo ID")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produto encontrado",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
-    @GetMapping("/{id}")
-    ResponseEntity<ProductResponse> findById(@PathVariable Long id);
+        @Operation(summary = "Buscar produto por ID", description = "Retorna um produto específico pelo ID")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Produto encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Não autorizado")
+        })
+        @GetMapping("/{id}")
+        ResponseEntity<ProductResponse> findById(@PathVariable Long id);
 
-    @Operation(summary = "Criar novo produto", description = "Adiciona um novo produto")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produto criado com sucesso",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
-    @PostMapping
-    ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest dto);
+        @Operation(summary = "Criar novo produto", description = "Adiciona um novo produto")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Produto criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Não autorizado")
+        })
+        @PostMapping
+        ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest dto);
 
-    @Operation(summary = "Atualizar produto", description = "Atualiza um produto existente")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Dados inválidos",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
-    @PutMapping("/{id}")
-    ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid @RequestBody ProductRequest dto);
+        @Operation(summary = "Atualizar produto", description = "Atualiza um produto existente")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Produto atualizado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponse.class))),
+                        @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Não autorizado")
+        })
+        @PutMapping("/{id}")
+        ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid @RequestBody ProductRequest dto);
 
-    @Operation(summary = "Excluir produto", description = "Remove um produto existente")
-    @ApiResponses({
-        @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso"),
-        @ApiResponse(responseCode = "404", description = "Produto não encontrado",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "401", description = "Não autorizado")
-    })
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id);
+        @Operation(summary = "Excluir produto", description = "Remove um produto existente")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "204", description = "Produto excluído com sucesso"),
+                        @ApiResponse(responseCode = "404", description = "Produto não encontrado", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                        @ApiResponse(responseCode = "401", description = "Não autorizado")
+        })
+        @DeleteMapping("/{id}")
+        ResponseEntity<Void> delete(@PathVariable Long id);
 }

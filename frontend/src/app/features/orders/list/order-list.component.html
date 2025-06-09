@@ -7,7 +7,9 @@
 
   <div *ngIf="loading" class="loading">Carregando seus pedidos...</div>
 
-  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
 
   <table *ngIf="!loading && !error && orders.length > 0">
     <thead>

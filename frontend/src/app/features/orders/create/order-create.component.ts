@@ -18,15 +18,13 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
 })
 export class OrderCreateComponent implements OnInit {
-  // Mantém apenas o Observable; o async pipe no template faz subscribe/unsubscribe
   produtos$!: Observable<PageProductResponse>;
-  filterTrigger$ = new BehaviorSubject<void>(undefined); // dispara nova busca
+  filterTrigger$ = new BehaviorSubject<void>(undefined);
   error: string | null = null;
 
   cart: CartItem[] = [];
   loadingSubmit = false;
 
-  // FILTROS e PAGINAÇÃO (caso queira implementar)
   filterName: string = '';
   filterCategory: string = '';
   filterMinPrice?: number;
@@ -41,9 +39,7 @@ export class OrderCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // produtos$ emite sempre que filterTrigger$ dispara
     this.produtos$ = this.filterTrigger$.pipe(
-      // a cada emissão (inclusive a inicial), faz a chamada
       switchMap(() =>
         this.productService
           .list(
@@ -57,7 +53,6 @@ export class OrderCreateComponent implements OnInit {
           .pipe(
             catchError((_) => {
               this.error = 'Erro ao carregar produtos.';
-              // retorna uma página vazia para não quebrar template
               return of({
                 content: [],
                 totalElements: 0,
@@ -71,14 +66,12 @@ export class OrderCreateComponent implements OnInit {
     );
   }
 
-  // Chamado ao clicar “Pesquisar”
   onSearch(): void {
-    this.page = 0; // volta para a página inicial
+    this.page = 0;
     this.error = null;
     this.filterTrigger$.next();
   }
 
-  // Limpa filtros e recarrega
   clearFilters(): void {
     this.filterName = '';
     this.filterCategory = '';
@@ -89,7 +82,6 @@ export class OrderCreateComponent implements OnInit {
     this.filterTrigger$.next();
   }
 
-  // Paginação (volta/avança página)
   changePage(delta: number): void {
     this.page = this.page + delta;
     if (this.page < 0) this.page = 0;
@@ -97,7 +89,6 @@ export class OrderCreateComponent implements OnInit {
     this.filterTrigger$.next();
   }
 
-  // Adiciona item ao carrinho
   addToCart(product: Product, quantityInput: HTMLInputElement): void {
     const qty = parseInt(quantityInput.value, 10);
     if (!qty || qty <= 0 || qty > product.stock) {
@@ -114,12 +105,10 @@ export class OrderCreateComponent implements OnInit {
     quantityInput.value = '';
   }
 
-  // Remove item do carrinho
   removeFromCart(productId: number): void {
     this.cart = this.cart.filter((item) => item.product.id !== productId);
   }
 
-  // Total do carrinho
   getCartTotal(): number {
     return this.cart.reduce(
       (acc, item) => acc + item.product.price * item.quantity,
@@ -127,7 +116,6 @@ export class OrderCreateComponent implements OnInit {
     );
   }
 
-  // Submete o pedido
   submitOrder(): void {
     if (!this.cart.length) {
       this.error = 'O pedido deve conter ao menos um item.';

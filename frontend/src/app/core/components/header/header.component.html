@@ -9,7 +9,6 @@
         <a routerLink="/orders" routerLinkActive="active">Pedidos</a>
       </li>
     </ul>
-
     <ul class="auth-list">
       <li *ngIf="!(loggedIn$ | async)">
         <a routerLink="/login" routerLinkActive="active">Login</a>
@@ -17,7 +16,6 @@
       <li *ngIf="!(loggedIn$ | async)">
         <a routerLink="/register" routerLinkActive="active">Registrar</a>
       </li>
-
       <li *ngIf="loggedIn$ | async" class="logout-item">
         <button type="button" (click)="logout()">Sair</button>
       </li>

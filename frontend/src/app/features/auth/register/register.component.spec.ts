@@ -1,3 +1,4 @@
+import { RouterTestingModule } from '@angular/router/testing';
 import {
   ComponentFixture,
   TestBed,
@@ -11,7 +12,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -25,11 +25,7 @@ describe('RegisterComponent', () => {
     const routeStub = { snapshot: { paramMap: { get: () => null } } };
 
     await TestBed.configureTestingModule({
-      imports: [
-        RegisterComponent,
-        ReactiveFormsModule,
-        RouterTestingModule, // ← necessário para RouterLink
-      ],
+      imports: [RegisterComponent, ReactiveFormsModule, RouterTestingModule],
       providers: [
         { provide: AuthService, useValue: authSpy },
         { provide: Router, useValue: rtrSpy },

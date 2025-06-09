@@ -9,8 +9,11 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,24 +39,24 @@ public class JwtUtil {
 
     public String generateToken(UserDetails user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .subject(user.getUsername())
                 .claim("roles", user.getAuthorities()
                         .stream().map(GrantedAuthority::getAuthority).toList())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationMs))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpirationMs))
                 .signWith(getSigningKey())
                 .compact();
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .subject(userDetails.getUsername())
                 .claim("roles", userDetails.getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)
                         .toList())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -72,7 +75,17 @@ public class JwtUtil {
 
     public List<String> getRolesFromToken(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("roles", List.class);
+        Object rolesObj = claims.get("roles");
+
+        if (rolesObj instanceof List<?>) {
+            List<?> roles = (List<?>) rolesObj;
+            return roles.stream()
+                    .filter(Objects::nonNull)
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

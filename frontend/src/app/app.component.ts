@@ -18,9 +18,7 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Combina isLoggedIn e isAdmin:
     this.isAdmin$ = this.authService.isLoggedIn$.pipe(
-      // se não estiver logado, não tenta obter isAdmin
       switchMap((loggedIn) => {
         if (loggedIn) {
           return this.authService.isAdmin$;
