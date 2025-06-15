@@ -25,16 +25,15 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "250m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend
-  namespace: loja-virtual
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 80
-  selector:
-    app: frontend
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: 20
+            periodSeconds: 5

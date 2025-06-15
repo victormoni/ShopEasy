@@ -7,13 +7,19 @@ package com.victormoni.ecommerce.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author Victor Moni
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterRequest {
 
     @Schema(example = "fulano", description = "Nome de usuário")
@@ -24,6 +30,7 @@ public class RegisterRequest {
     @NotBlank
     private String password;
 
+    @Builder.Default
     @Pattern(regexp = "USER|ADMIN", message = "Role deve ser USER ou ADMIN")
     private String role = "USER";
 }

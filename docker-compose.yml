@@ -1,12 +1,9 @@
-version: "3.8"
-
 services:
-  database:
+  mysql:
     image: mysql:8.0
-    container_name: database
-    restart: unless-stopped
+    container_name: mysql
     environment:
-      MYSQL_DATABASE: lojavirtual
+      MYSQL_DATABASE: ecommerce
       MYSQL_ROOT_PASSWORD: "1234"
     ports:
       - "3306:3306"
@@ -35,17 +32,15 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    restart: unless-stopped
     depends_on:
-      database:
+      mysql:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/lojavirtual?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
     networks:
       - app-network
     healthcheck:
@@ -59,7 +54,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
-    restart: unless-stopped
     ports:
       - "80:80"
     depends_on:
@@ -68,8 +62,48 @@ services:
     networks:
       - app-network
 
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8085:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - app-network
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -80,6 +114,7 @@ services:
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: logstash
     volumes:
       - ./elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
@@ -89,6 +124,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
@@ -104,3 +140,4 @@ networks:
 
 volumes:
   dbdata:
+  kafka_data:

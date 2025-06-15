@@ -20,11 +20,13 @@ spec:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql:3306/lojavirtual?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+              value: jdbc:mysql://mysql:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
             - name: SPRING_DATASOURCE_USERNAME
               value: root
             - name: SPRING_DATASOURCE_PASSWORD
               value: "1234"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:9092
           resources:
             requests:
               memory: "512Mi"
@@ -32,18 +34,17 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend
-  namespace: loja-virtual
-spec:
-  selector:
-    app: backend
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: LoadBalancer
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 10

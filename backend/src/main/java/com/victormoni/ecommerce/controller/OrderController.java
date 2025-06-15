@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Victor Moni
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
@@ -47,6 +49,7 @@ public class OrderController implements OrderApi {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<OrderResponse> list() {
+        log.info("📦 Listando todos os pedidos (admin)");
         return orderService.list();
     }
 
@@ -59,31 +62,37 @@ public class OrderController implements OrderApi {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction) {
 
+        String username = userDetails.getUsername();
+        log.info("📄 Listando pedidos do usuário: {}", username);
+
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<OrderResponse> orders = orderService.findByUser(userDetails.getUsername(), pageable);
-        return ResponseEntity.ok(orders);
+
+        return ResponseEntity.ok(orderService.findByUser(username, pageable));
     }
 
     @Override
     @GetMapping("/{id}")
     public OrderResponse findById(@PathVariable Long id) {
+        log.info("🔎 Buscando pedido por ID: {}", id);
         return orderService.findById(id);
     }
 
     @Override
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<OrderResponse>> findByStatus(@PathVariable OrderStatus status,
+    public ResponseEntity<Page<OrderResponse>> findByStatus(
+            @PathVariable OrderStatus status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction) {
 
+        log.info("📊 Listando pedidos com status: {}", status);
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<OrderResponse> orders = orderService.findByStatus(status, pageable);
-        return ResponseEntity.ok(orders);
+
+        return ResponseEntity.ok(orderService.findByStatus(status, pageable));
     }
 
     @Override
@@ -93,8 +102,9 @@ public class OrderController implements OrderApi {
             @Valid @RequestBody OrderRequest request) {
 
         String username = userDetails.getUsername();
-        OrderResponse response = orderService.create(username, request);
-        return ResponseEntity.ok(response);
+        log.info("📝 Criando pedido para usuário: {}", username);
+
+        return ResponseEntity.ok(orderService.create(username, request));
     }
 
     @Override
@@ -105,14 +115,16 @@ public class OrderController implements OrderApi {
             @Valid @RequestBody OrderRequest request) {
 
         String username = userDetails.getUsername();
-        OrderResponse response = orderService.update(username, id, request);
-        return ResponseEntity.ok(response);
+        log.info("✏️ Atualizando pedido {} para usuário: {}", id, username);
+
+        return ResponseEntity.ok(orderService.update(username, id, request));
     }
 
     @Override
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.warn("❌ Excluindo pedido com ID: {}", id);
         orderService.delete(id);
         return ResponseEntity.noContent().build();
     }

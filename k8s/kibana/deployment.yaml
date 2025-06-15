@@ -21,10 +21,6 @@ spec:
           env:
             - name: ELASTICSEARCH_HOSTS
               value: "http://elasticsearch:9200"
-            - name: SERVER_BASEPATH
-              value: "/kibana"
-            - name: SERVER_REWRITEBASEPATH
-              value: "true"
           resources:
             requests:
               memory: "1Gi"
@@ -32,15 +28,17 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1000m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kibana
-  namespace: loja-virtual
-spec:
-  selector:
-    app: kibana
-  ports:
-    - port: 5601
-      targetPort: 5601
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: 5601
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 3

@@ -4,7 +4,11 @@ package com.victormoni.ecommerce.service;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-import org.springframework.security.core.Authentication;
+import com.victormoni.ecommerce.dto.request.LoginRequest;
+import com.victormoni.ecommerce.dto.request.RefreshRequest;
+import com.victormoni.ecommerce.dto.request.RegisterRequest;
+import com.victormoni.ecommerce.dto.response.AuthResponse;
+import com.victormoni.ecommerce.dto.response.SuccessResponse;
 
 /**
  *
@@ -12,6 +16,10 @@ import org.springframework.security.core.Authentication;
  */
 public interface AuthService {
 
-    Authentication authenticate(String username, String password);
+    public AuthResponse login(LoginRequest request);
+
+    public AuthResponse refresh(RefreshRequest request);
+
+    public SuccessResponse register(RegisterRequest request);
 
 }
