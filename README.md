@@ -3,266 +3,133 @@
 Este repositório contém uma aplicação completa de **Loja Virtual**, composta por:
 
 - **Frontend**: SPA em **Angular 19**, empacotada e servida por **NGINX**.
-- **Backend**: API RESTful em **Spring Boot** (Java 21), conectada a um banco de dados **MySQL**.
-- **Banco de Dados**: **MySQL 8.0** (rodando em container Docker).
-
-Abaixo estão as instruções para configurar, executar e testar localmente toda a stack.
-
----
-
-## Índice
-
-1. [Visão Geral do Projeto](#visão-geral-do-projeto)
-2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
-3. [Pré-requisitos](#pré-requisitos)
-4. [Estrutura de Pastas](#estrutura-de-pastas)
-5. [Configuração de Ambiente](#configuração-de-ambiente)
-   - 5.1. Configurações do Frontend
-   - 5.2. Variáveis de Ambiente do Backend
-6. [Executando com Docker Compose](#executando-com-docker-compose)
-7. [Instalação Manual (sem Docker)](#instalação-manual-sem-docker)
-   - 7.1. Frontend (Angular 19)
-   - 7.2. Backend (Spring Boot)
-   - 7.3. Banco de Dados MySQL
-8. [Executando Testes](#executando-testes)
-9. [Endpoints Principais](#endpoints-principais)
-10. [Considerações Finais](#considerações-finais)
+- **Backend**: API RESTful em **Spring Boot 3.5.0** (Java 21), com integração com **Kafka**, **MySQL** e **Flyway**.
+- **Banco de Dados**: **MySQL 8.0**.
+- **Mensageria**: **Apache Kafka** para eventos de pedidos.
+- **Infraestrutura**: **Docker Compose** para orquestração local e **Kubernetes (K8s)** para deploy em ambiente de nuvem ou cluster local.
 
 ---
 
-## Visão Geral do Projeto
+## 📚 Índice
 
-A **Loja Virtual** é um sistema de e-commerce simplificado, dividido em duas partes:
-
-1. **Frontend (SPA em Angular 19)**
-
-   - Desenvolvido em Angular 19
-   - Consome a API Spring Boot para operações de login, cadastro e CRUD de produtos
-   - Empacotado em um container NGINX para servir o build de produção
-
-2. **Backend (API REST)**
-
-   - Desenvolvido em Spring Boot 3.5.0
-   - Autenticação e autorização via JWT
-   - Endpoints para gerenciar usuários, autenticação, produtos e pedidos
-   - Camada de persistência usando Spring Data JPA e MySQL
-
-3. **Banco de Dados (MySQL)**
-   - Versão 8.0
-   - Container Docker rodando uma instância MySQL com schema `ecommerce`
-   - Usuário `root` (senha configurável via `docker-compose`)
+1. [💡 Visão Geral](#-visão-geral)
+2. [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+3. [📂 Estrutura de Pastas](#-estrutura-de-pastas)
+4. [🛠️ Execução com Docker Compose](#️-execução-com-docker-compose)
+5. [🚀 Execução com Kubernetes](#-execução-com-kubernetes)
+6. [🔧 Testes](#-testes)
+7. [📊 Observabilidade (ELK, Prometheus, Actuator)](#-observabilidade-elk-prometheus-actuator)
+8. [🏠 Configuração de Ambiente](#-configuração-de-ambiente)
+9. [💡 Principais Endpoints da API](#-principais-endpoints-da-api)
+10. [📖 Considerações Finais](#-considerações-finais)
 
 ---
 
-## Tecnologias Utilizadas
+## 💡 Visão Geral
 
-- **Frontend**
+O projeto tem como objetivo fornecer uma base completa para um sistema de e-commerce com:
 
-  - Angular 19
-  - TypeScript
-  - RxJS
-  - NGINX (versão Alpine) para servir o build
-
-- **Backend**
-
-  - Java 21
-  - Spring Boot 3.5.0 (Spring Web, Spring Data JPA, Spring Security)
-  - Hibernate ORM 6.6.15
-  - MySQL Connector/J 8.0
-  - JWT (JSON Web Tokens) para autenticação
-
-- **Infraestrutura & Build**
-  - Docker 24.x
-  - Docker Compose 2.x
-  - Maven 3.9.x (para o backend)
-  - Node.js 18.x + npm (para o frontend)
+- Autenticação JWT
+- CRUD de usuários, produtos e pedidos
+- Eventos Kafka para processar pedidos
+- Observabilidade via Spring Actuator e Prometheus
+- Deploy local com Docker Compose ou em cluster com Kubernetes
 
 ---
 
-## Pré-requisitos
+## ⚙️ Tecnologias Utilizadas
 
-Antes de rodar o projeto, tenha instalado em sua máquina:
+### Backend
 
-1. **Git** (para clonar o repositório)
-2. **Docker & Docker Compose** (versões recentes)
-   - No Windows/Mac: Docker Desktop com suporte a WSL2 (caso use Windows).
-   - No Linux: Docker Engine + Docker Compose Plugin.
-3. **Java JDK 21** (caso queira executar o backend sem Docker)
-4. **Maven 3.9.x** (caso queira buildar/executar manualmente o backend)
-5. **Node.js 18.x** e **npm** (caso queira buildar/executar manualmente o frontend)
+- Java 21
+- Spring Boot 3.5.0
+- Spring Security
+- Spring Data JPA
+- Apache Kafka
+- MySQL
+- JUnit 5 e Mockito (testes)
 
-> **Observação**: Se você pretende rodar tudo via Docker Compose, Java, Maven, Node e npm não são obrigatórios localmente — apenas Docker e Compose.
+### Frontend
+
+- Angular 19
+- RxJS
+- Karma / Jasmine
+- JWT
+
+### Infraestrutura
+
+- Docker
+- Docker Compose
+- Kubernetes (Minikube)
+- ELK Stack (Elasticsearch, Logstash, Kibana)
 
 ---
 
-## Estrutura de Pastas
-
-Ao clonar o projeto, você verá:
+## 📂 Estrutura de Pastas
 
 ```
 loja-virtual/
-├── backend/                       # Código-fonte do backend (Spring Boot)
-│   ├── src/
+├── backend/
+|   |── src/
 │   ├── pom.xml
 │   └── Dockerfile
-├── frontend/                      # Código-fonte do frontend (Angular 19)
-│   ├── src/
+├── elk                 # Configuração do logstash
+├── frontend/
+|   ├── src/
 │   ├── package.json
 │   └── Dockerfile
-├── docker-compose.yml             # Orquestração dos containers (db, backend, frontend)
-└── README.md                      # Este arquivo
+├── k8s/                # Manifests do Kubernetes
+├── docker-compose.yml
+├── LICENSE             # MIT LICENSE
+├── minikube.sh         # Script para rodar o minikube
+└── README.md
 ```
-
-- **backend/**  
-  Contém todo o projeto Spring Boot:
-
-  - `src/main/java/...` → pacotes de controllers, serviços, repositórios, configurações de segurança.
-  - `src/main/resources/application.properties` → configurações de conexão MySQL (ajustáveis por variáveis de ambiente no Docker Compose).
-  - `src/test/java/...` → testes de integração (usando H2 ou Testcontainers se configurado).
-  - `Dockerfile` → imagem que empacota o JAR executável e roda no Tomcat embutido.
-
-- **frontend/**  
-  Contém todo o projeto Angular 19:
-
-  - `src/app/` → componentes, serviços, módulos e rotas.
-  - `angular.json`, `tsconfig.json`, `package.json` → configurações do Angular.
-  - `Dockerfile` → etapa de build (Node) + etapa de runtime (NGINX) que copia o `dist/` para `/usr/share/nginx/html`.
-
-- **docker-compose.yml**  
-  Orquestra:
-  - Serviço **db**: roda MySQL 8.0, inicializa o schema `ecommerce`.
-  - Serviço **backend**: builda a imagem Spring Boot e expõe a porta 8080.
-  - Serviço **frontend**: builda o Angular e expõe a porta 4200 (mapeada para o NGINX interno 80).
 
 ---
 
-## Configuração de Ambiente
+## 🛠️ Execução com Docker Compose
 
-### 5.1. Variáveis de Ambiente do Backend
+### 4.1 Clone o repositório (caso ainda não tenha feito):
 
-O Spring Boot “pega” as variáveis de conexão ao banco por meio de _environment variables_ no Docker Compose. No `application.properties` temos algo como:
-
-```properties
-# Exemplo (em src/main/resources/application.properties):
-spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=root
-spring.datasource.password=1234
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+```bash
+git clone https://github.com/victormoni/loja-virtual.git
+cd loja-virtual
 ```
 
-No `docker-compose.yml`, o serviço **backend** sobrescreve essas variáveis:
+### 4.2 Remova versões antigas e garanta que não há containers conflitantes:
 
-```yaml
-services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-    ports:
-      - "8080:8080"
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - app-network
+```bash
+docker compose down --remove-orphans
 ```
 
-#### Variáveis importantes:
+### 4.3 Suba todos os serviços (MySQL, backend e frontend) em modo destacado (detached):
 
-- `SPRING_DATASOURCE_URL`: URL JDBC para conectar ao container `db`.
-- `SPRING_DATASOURCE_USERNAME`: usuário do MySQL (ex.: `root`).
-- `SPRING_DATASOURCE_PASSWORD`: senha do MySQL (ex.: `1234`).
-- `SPRING_DATASOURCE_DRIVER_CLASS_NAME`: driver JDBC (padrão `com.mysql.cj.jdbc.Driver`).
-
-Você pode alterar esses valores diretamente no `docker-compose.yml` se quiser outro usuário/senha ou outra porta.
-
----
-
-### 5.2. Configurações do Frontend
-
-No projeto Angular, existe um arquivo `environment.ts` (em `frontend/src/environments/`) que define a URL base para a API. Exemplo:
-
-```ts
-// src/environments/environment.ts
-export const environment = {
-  production: false,
-  apiUrl: "http://localhost:8080/api",
-};
+```bash
+docker compose up -d --build
 ```
 
-E, no `environment.prod.ts` (para build de prod):
+- `--build` força o rebuild das imagens (`backend` e `frontend`), garantindo que o código mais recente seja empacotado.
 
-```ts
-// src/environments/environment.prod.ts
-export const environment = {
-  production: true,
-  apiUrl: "/api", // Quando servido pelo NGINX, as chamadas serão relativas
-};
+### 4.4 Acompanhe os logs (opcional):
+
+```bash
+docker compose logs -f
 ```
 
-> **Importante**: Se você rodar o Angular via `ng serve`, mantenha `apiUrl: 'http://localhost:8080/api'`.  
-> Se for buildar para produção (e servir via NGINX), use `/api` ou a rota apropriada que configure no NGINX para redirecionar `/api` ao backend.
+### 4.5 Acesse a aplicação:
 
----
+- Frontend: [http://localhost:4200](http://localhost:4200)
+- Backend: [http://localhost:8080](http://localhost:8080)
+- MySQL: [localhost:3306](localhost:3306)
+- Kafka: [localhost:9092](localhost:9092)
+- Actuator: [http://localhost:8080/actuator](http://localhost:8080/actuator)
+- Swagger (OpenAPI): [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- Kafka UI: [http://localhost:8085/](http://localhost:8085/)
+- Kibana: [http://localhost:5601/](http://localhost:5601/)
+- H2 Database: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+- Jacoco: [file:///C:/<CAMINHO_ATÉ_O_DIRETÓRIO_DO_PROJETO>/loja-virtual/backend/target/site/jacoco/index.html](file:///C:/<caminho_do_projeto>/loja-virtual/backend/target/site/jacoco/index.html)
 
-## Executando com Docker Compose
-
-### Passo a Passo
-
-1. **Clone o repositório** (caso ainda não tenha feito):
-
-   ```bash
-   git clone https://github.com/victormoni/loja-virtual.git
-   cd loja-virtual
-   ```
-
-2. **Remova versões antigas e garanta que não há containers conflitantes**:
-
-   ```bash
-   docker compose down --remove-orphans
-   ```
-
-3. **Suba todos os serviços** (MySQL, backend e frontend) em modo destacado (detached):
-
-   ```bash
-   docker compose up -d --build
-   ```
-
-   - `--build` força o rebuild das imagens (`backend` e `frontend`), garantindo que o código mais recente seja empacotado.
-
-4. **Acompanhe os logs (opcional)**:
-
-   ```bash
-   docker compose logs -f
-   ```
-
-   Em breve, você deverá ver algo como:
-
-   - O MySQL inicializando e ficando “ready for connections”.
-   - O backend Spring Boot conectando ao banco e iniciando Tomcat em `Port 8080`.
-   - O frontend NGINX servindo o build Angular em `Port 80` dentro do container, mapeado para a porta `4200` do host.
-
-5. **Acesse a aplicação**:
-   - **Frontend**: abra o navegador em
-     ```
-     http://localhost:4200
-     ```
-   - **Backend (API)**: você pode testar via Postman ou curl, por exemplo:
-     ```
-     GET http://localhost:8080/actuator/health
-     ```
-     deve retornar status 200 e JSON com o estado de saúde do Spring (`{"status":"UP"}`).
-
-### Parando os Containers
+### 4.6 Parando os Containers
 
 Para parar e remover todos os containers da stack:
 
@@ -274,270 +141,163 @@ Isso encerra todos os serviços e libera as portas (3306, 8080, 4200).
 
 ---
 
-## Instalação Manual (sem Docker)
+## 🚀 Execução com Kubernetes (K8s)
 
-Caso você prefira executar cada parte separadamente (por exemplo, para depuração local), siga os passos abaixo.
+### 5.1 Subir infraestrutura
 
-### 7.1. Backend (Spring Boot)
+Execute o script minikube.sh pelo terminal como administrador na pasta raiz do projeto:
 
-1. **Configurar MySQL localmente**
+```bash
+./minikube.sh
+```
 
-   - Instale o MySQL 8.0 no seu computador ou em outra máquina acessível.
-   - Crie um banco de dados chamado `ecommerce`:
-     ```sql
-     CREATE DATABASE ecommerce CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-     ```
-   - Certifique-se de que exista um usuário `root` (ou outro de sua preferência) com senha. Exemplo:
-     ```sql
-     ALTER USER 'root'@'localhost' IDENTIFIED BY '1234';
-     ```
+### 5.2 Rode o minikube tunnel
 
-2. **Ajustar `application.properties`**  
-   Em `backend/src/main/resources/application.properties`, configure:
+Execute o comando minikube tunnel em outro terminal como administrador para aloja funcionar, deixe o tunnel aberto enquanto estiver usando.
 
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-   spring.datasource.username=root
-   spring.datasource.password=1234
-   ```
+```bash
+minikube tunnel
+```
 
-3. **Buildar e rodar com Maven**  
-   Abra um terminal na pasta `backend/` e execute:
+### 5.3 Descubra o EXTERNAL-IP e do Ingress NGINX com o comando: kubectl get svc -n ingress-nginx
 
-   ```bash
-   mvn clean package -DskipTests
-   java -jar target/ecommerce-0.0.1-SNAPSHOT.jar
-   ```
+- Exemplo
 
-   Ou, se quiser rodar diretamente sem empacotar:
+```bash
+kubectl get svc -n ingress-nginx
 
-   ```bash
-   mvn spring-boot:run
-   ```
+echo "NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE"
+echo "ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m"
+```
 
-4. **Verificar se o backend subiu**  
-   Acesse no navegador ou via curl:
-   ```
-   http://localhost:8080/actuator/health
-   ```
-   Deve retornar status `UP`.
+### 5.4 Depois acesse no navegador: http://<'EXTERNAL-IP'>/"
+
+Pegue o EXTERNAL-IP do comando anterior e troque pelo "localhost" nas URLs que vc for usar, lembre-se que dependendo da URL que for usar é necessário colocar a porta da URL:
+
+- Exemplo (Kibana):
+
+[http://192.168.49.2:5601](http://192.168.49.2:5601)
 
 ---
 
-### 7.2. Frontend (Angular 19)
+## 🔧 Testes
 
-1. **Instalar dependências Node.js**  
-   Abra um terminal na pasta `frontend/` e execute:
+### Backend:
 
-   ```bash
-   npm install
-   ```
+- Testes backend com JUnit 5 + Mockito
+- Testes de integração com banco H2
+- ## Uso do Jacoco para Cobertura de Código
 
-2. **Rodar o servidor de desenvolvimento**  
-   Para modo dev com hot reload:
+Executar:
 
-   ```bash
-   ng serve --open
-   ```
+```bash
+mvn clean verify -Dspring.profiles.active=test
+```
 
-   - O comando `ng serve` levantará o servidor em `http://localhost:4200`.
-   - Ele “escutará” mudanças nos arquivos e recarregará automaticamente o navegador.
+### Frontend:
 
-3. **Build de produção**  
-   Quando quiser gerar a versão de produção (minificada, otimizada):
-   ```bash
-   ng build --configuration production
-   ```
-   - Isso criará a pasta `frontend/dist/frontend/`, contendo `index.html`, `main.js`, estilos, etc.
-   - Você pode servir esses arquivos com um servidor HTTP (por exemplo, NGINX, Apache, ou `http-server` do npm).
+- Testes frontend com Karma + Jasmine
+
+```bash
+ng test
+```
 
 ---
 
-### 7.3. Banco de Dados MySQL
+## 📊 Observabilidade
 
-Caso não use Docker, instale e configure manualmente:
+- **Spring Boot Actuator**: health, metrics, info.
+- **Prometheus**: coleta de métricas.
+- **ELK (Elasticsearch + Logstash + Kibana)**: centralização de logs.
 
-1. **Instalação**
+> As configurações de log estão no logback, com possibilidade de direcionamento ao Logstash.
 
-   - **Windows**: baixe o MySQL Installer em [dev.mysql.com](https://dev.mysql.com/downloads/installer/) e siga os passos.
-   - **macOS**: use Homebrew:
-     ```bash
-     brew install mysql@8.0
-     brew services start mysql@8.0
-     ```
-   - **Linux (Ubuntu/Debian)**:
-     ```bash
-     sudo apt update
-     sudo apt install mysql-server
-     sudo systemctl start mysql
-     ```
+## 🏠 Configuração de Ambiente
 
-2. **Criar usuário/banco**  
-   Acesse via client CLI ou Workbench:
+### 8.1 Variáveis de Ambiente do Backend
 
-   ```sql
-   CREATE DATABASE ecommerce CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   CREATE USER 'root'@'localhost' IDENTIFIED BY '1234';
-   GRANT ALL PRIVILEGES ON ecommerce.* TO 'root'@'localhost';
-   FLUSH PRIVILEGES;
-   ```
+O Spring Boot “pega” as variáveis de conexão ao banco por meio de _environment variables_ no Docker Compose. No `application.properties` temos algo como:
 
-3. **Ajustar o `application.properties` do backend** (conforme mostrado no tópico 7.1).
+```properties
+# Exemplo (em src/main/resources/application.properties):
+spring.datasource.url=jdbc:mysql://mysql:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=1234
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
 
----
+### 8.2 Configurações do Frontend
 
-## Executando Testes
+No projeto Angular, existe um arquivo `environment.ts` (em `frontend/src/environments/`) que define a URL base para a API. Exemplo:
 
-### 8.1. Testes de Unidade/Integração do Backend
+```ts
+export const environment = {
+  production: false,
+  apiUrl: "http://localhost:8080/api",
+};
+```
 
-O projeto backend já inclui testes de integração em `src/test/java/com/victormoni/ecommerce/integration/AuthIntegrationTest.java`. Eles validam fluxos de registro, login e obtenção de dados do usuário autenticado.
+E, no `environment.prod.ts` (para build de prod):
 
-#### Com Maven
+```ts
+export const environment = {
+  production: true,
+  apiUrl: "/api",
+};
+```
 
-1. **Certifique-se de ter configurado H2 para teste**
-
-   - Em `src/test/resources/application-test.properties`, estão apontando para H2 (in-memory).
-   - As classes de teste usam `@ActiveProfiles("test")`, de modo que o Spring Boot roda H2 sem tentar se conectar ao MySQL real.
-
-2. **Executar todos os testes**:
-
-   ```bash
-   cd backend
-   mvn test
-   ```
-
-3. **Executar testes específicos**:
-   ```bash
-   mvn -Dtest=AuthIntegrationTest test
-   ```
-   Ou:
-   ```bash
-   mvn -Dtest=AuthIntegrationTest#shouldRegisterAndLoginSuccessfully test
-   ```
-
-### 8.2. Testes do Frontend
-
-Se você escreveu testes unitários ou de integração para componentes Angular (ex.: com Jasmine/Karma ou Cypress), basta rodar:
-
-1. **Testes unitários (Karma/Jasmine)**:
-
-   ```bash
-   cd frontend
-   ng test
-   ```
-
-   - Isso abrirá o navegador com o runner de testes Karma.
-
-2. **Testes end-to-end (Protractor/Cypress)**:
-   - Caso tenha configurado Protractor, rode:
-     ```bash
-     ng e2e
-     ```
-   - Se usar Cypress, então:
-     ```bash
-     npm run cypress:open
-     ```
-
-_(Se não houver testes configurados para o frontend, ignore esta seção.)_
+> **Importante**: Se você rodar o Angular via `ng serve`, mantenha `apiUrl: 'http://localhost:8080/api'`.  
+> Se for buildar para produção (e servir via NGINX), use `/api` ou a rota apropriada que configure no NGINX para redirecionar `/api` ao backend.
 
 ---
 
-## Endpoints Principais
+## 💡 Principais Endpoints da API
 
-A API REST do backend expõe, entre outros:
+- Autenticação:
 
-- **Autenticação / Registro**
+  - POST `/api/auth/register`
+  - POST `/api/auth/login`
+  - POST `/api/auth/refresh`
 
-  - `POST /api/auth/register`
-    - Request (JSON):
-      ```json
-      {
-        "username": "joao",
-        "password": "senha123",
-        "role": "USER"
-      }
-      ```
-    - Response: 200 OK (ou 4xx em caso de erro).
-  - `POST /api/auth/login`
-    - Request (JSON):
-      ```json
-      {
-        "username": "joao",
-        "password": "senha123"
-      }
-      ```
-    - Response (JSON):
-      ```json
-      {
-        "accessToken": "<jwt>",
-        "refreshToken": "<jwt_refresh>"
-      }
-      ```
+- Usuários:
 
-- **Refreshing Token**
+  - GET `/api/users/me`
+  - GET `/api/users` (admin)
 
-  - `POST /api/auth/refresh`
-    - Request (JSON):
-      ```json
-      {
-        "refreshToken": "<jwt_refresh>"
-      }
-      ```
-    - Response (JSON):
-      ```json
-      {
-        "accessToken": "<novo_jwt_access>",
-        "refreshToken": "<mesmo_refresh>"
-      }
-      ```
+- Produtos:
 
-- **Usuário Logado**
+  - GET `/api/products`
+  - POST `/api/products` (admin)
 
-  - `GET /api/users/me`
-    - Header: `Authorization: Bearer <accessToken>`
-    - Response (JSON):
-      ```json
-      {
-        "id": 5,
-        "username": "joao",
-        "role": "USER"
-      }
-      ```
+- Pedidos:
 
-- **Produtos**
-  - `GET /api/products` → listar todos (público)
-  - `GET /api/products/{id}` → obter produto por ID (público)
-  - `POST /api/products` → criar produto (somente ADMIN)
-  - `PUT /api/products/{id}` → atualizar produto (ADMIN)
-  - `DELETE /api/products/{id}` → deletar produto (ADMIN)
+  - POST `/api/orders`
+  - GET `/api/orders`
 
-_(Documentação OpenAPI disponível em `/swagger-ui.html` e `/v3/api-docs` se você habilitou o Swagger.)_
+- Actuator:
+
+  - `/actuator/health`
+  - `/actuator/prometheus`
+
+- Swagger:
+
+  - `/swagger-ui.html`
+  - `/v3/api-docs`
 
 ---
 
-## Considerações Finais
+## 📖 Considerações Finais
 
-- **Banco em Produção**:  
-  Em um ambiente real, nunca use `MYSQL_ALLOW_EMPTY_PASSWORD` nem exponha `root` sem senha.  
-  Configure um usuário específico de aplicação com direitos limitados e armazene as credenciais em variáveis de ambiente seguras (Vault, AWS Secrets, Azure Key Vault, etc.).
-
-- **HTTPS no Frontend**:  
-  Para produção, configure o NGINX (ou outra camada reverse proxy) para servir via HTTPS e redirecionar o tráfego API para o backend adequadamente.
-
-- **Ambientes Diferentes**:
-
-  - `environment.ts` (desenvolvimento): aponta para `http://localhost:8080/api`.
-  - `environment.prod.ts` (produção): se `apiUrl = '/api'`, configure o NGINX para rotear `/api` ao backend.
-
-- **Possíveis Expansões**:
-  - Adicionar paginação nos endpoints de produtos.
-  - Implementar upload de imagens, carrinho de compras e checkout.
-  - Deploy em Kubernetes ou outro serviço de orquestração.
+- JWT implementado para segurança.
+- Apache Kafka integrado para eventos.
+- Possível deploy local (Docker Compose) ou em K8s.
+- Logging pronto para integração com ELK.
+- Monitoramento exposto para Prometheus.
 
 ---
 
 Obrigado por usar a **Loja Virtual**!  
-Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/loja-virtual/issues) ou envie um PR.
+Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/loja-virtual/issues) ou envie um Pull Request.
 
-**Licença:** MIT License (consulte o arquivo [LICENSE](LICENSE) para mais detalhes)  
 **Autor:** Victor Moni
+**Licença:** MIT License (consulte o arquivo [LICENSE](LICENSE) para mais detalhes)
