@@ -20,7 +20,7 @@ spec:
             - containerPort: 3306
           env:
             - name: MYSQL_DATABASE
-              value: lojavirtual
+              value: ecommerce
             - name: MYSQL_ROOT_PASSWORD
               value: "1234"
           resources:
@@ -31,34 +31,19 @@ spec:
               memory: "1Gi"
               cpu: "500m"
           volumeMounts:
-            - name: mysql-pv
+            - name: mysql-storage
               mountPath: /var/lib/mysql
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 30
+            periodSeconds: 10
       volumes:
-        - name: mysql-pv
+        - name: mysql-storage
           persistentVolumeClaim:
             claimName: mysql-pvc
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pvc
-  namespace: loja-virtual
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql
-  namespace: loja-virtual
-spec:
-  ports:
-    - port: 3306
-      targetPort: 3306
-  selector:
-    app: mysql
-  type: ClusterIP

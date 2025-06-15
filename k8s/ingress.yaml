@@ -16,7 +16,6 @@ spec:
                 name: backend
                 port:
                   number: 8080
-
           - path: /swagger-ui(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -24,7 +23,6 @@ spec:
                 name: backend
                 port:
                   number: 8080
-
           - path: /actuator(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -32,7 +30,13 @@ spec:
                 name: backend
                 port:
                   number: 8080
-
+          - path: /kafka-ui(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: kafka-ui
+                port:
+                  number: 8080
           - path: /
             pathType: Prefix
             backend:
@@ -40,7 +44,6 @@ spec:
                 name: frontend
                 port:
                   number: 80
-
           - path: /kibana(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
