@@ -16,7 +16,7 @@ Este repositório contém uma aplicação completa de **Loja Virtual**, composta
 2. [Tecnologias Utilizadas](#️-tecnologias-utilizadas)
 3. [Estrutura de Pastas](#-estrutura-de-pastas)
 4. [Execução com Docker Compose](#️-execução-com-docker-compose)
-5. [Execução com Kubernetes](#-execucao-com-kubernetes)
+5. [Execução com Kubernetes](#-execução-com-kubernetes)
 6. [Testes](#-testes)
 7. [Observabilidade](#-observabilidade)
 8. [Configuração de Ambiente](#-configuração-de-ambiente)
@@ -141,7 +141,7 @@ Isso encerra todos os serviços e libera as portas (3306, 8080, 4200).
 
 ---
 
-## 🚀 Execução com Kubernetes (K8s)
+## 🚀 Execução com Kubernetes
 
 ### 5.1 Subir infraestrutura
 
