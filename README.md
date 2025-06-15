@@ -12,16 +12,16 @@ Este repositório contém uma aplicação completa de **Loja Virtual**, composta
 
 ## 📚 Índice
 
-1. [💡 Visão Geral](#-visão-geral)
-2. [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-3. [📂 Estrutura de Pastas](#-estrutura-de-pastas)
-4. [🛠️ Execução com Docker Compose](#️-execução-com-docker-compose)
-5. [🚀 Execução com Kubernetes](#-execução-com-kubernetes)
-6. [🔧 Testes](#-testes)
-7. [📊 Observabilidade (ELK, Prometheus, Actuator)](#-observabilidade-elk-prometheus-actuator)
-8. [🏠 Configuração de Ambiente](#-configuração-de-ambiente)
-9. [💡 Principais Endpoints da API](#-principais-endpoints-da-api)
-10. [📖 Considerações Finais](#-considerações-finais)
+1. [Visão Geral](#-visão-geral)
+2. [Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+3. [Estrutura de Pastas](#-estrutura-de-pastas)
+4. [Execução com Docker Compose](#️-execução-com-docker-compose)
+5. [Execução com Kubernetes](#-execução-com-kubernetes)
+6. [Testes](#-testes)
+7. [Observabilidade (ELK, Prometheus, Actuator)](#-observabilidade-elk-prometheus-actuator)
+8. [Configuração de Ambiente](#-configuração-de-ambiente)
+9. [Principais Endpoints da API](#-principais-endpoints-da-api)
+10. [Considerações Finais](#-considerações-finais)
 
 ---
 
