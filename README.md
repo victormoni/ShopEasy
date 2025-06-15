@@ -120,7 +120,6 @@ docker compose logs -f
 
 - MySQL: [localhost:3306](localhost:3306)
 - Kafka: [localhost:9092](localhost:9092)
-
 - Frontend: [http://localhost:4200](http://localhost:4200)
 - Backend: [http://localhost:8080](http://localhost:8080)
 - Actuator: [http://localhost:8080/actuator](http://localhost:8080/actuator)
