@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.getItems().addAll(items);
         order.calculateTotal();
-
+        order.setStatus(OrderStatus.NEW);   
         Order saved = orderRepository.save(order);
         log.info("✅ Pedido criado com ID: {}", saved.getId());
 

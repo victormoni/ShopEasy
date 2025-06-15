@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <springProperty scope="context" name="LOGSTASH_HOST" source="LOGSTASH_HOST" defaultValue="logstash" />
+    <springProperty scope="context" name="LOGSTASH_PORT" source="LOGSTASH_PORT" defaultValue="5000" />
 
-  <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-    <destination>logstash:5000</destination>
-    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-      <providers>
-        <timestamp>
-          <timeZone>UTC</timeZone>
-        </timestamp>
-        <pattern>
-          <pattern>
-            {
-              "severity": "%level",
-              "service": "ecommerce-backend",
-              "trace": "%X{X-B3-TraceId:-}",
-              "span": "%X{X-B3-SpanId:-}",
-              "exportable": "%X{X-Span-Export:-}",
-              "thread": "%thread",
-              "class": "%logger{40}",
-              "message": "%message"
-            }
-          </pattern>
-        </pattern>
-      </providers>
-    </encoder>
-  </appender>
+    <!-- Console para todos os profiles -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-  <root level="INFO">
-    <appender-ref ref="LOGSTASH"/>
-  </root>
+    <!-- Logstash só para dev e prod -->
+    <springProfile name="dev,prod">
+        <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="LOGSTASH" />
+        </root>
+    </springProfile>
+
+    <!-- Para outros profiles (test, test-mysql, etc), só Console -->
+    <springProfile name="default,test,test-mysql">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
 
 </configuration>

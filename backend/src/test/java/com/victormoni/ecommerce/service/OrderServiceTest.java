@@ -8,6 +8,8 @@ import com.victormoni.ecommerce.dto.request.OrderItemRequest;
 import com.victormoni.ecommerce.dto.request.OrderRequest;
 import com.victormoni.ecommerce.exception.BusinessException;
 import com.victormoni.ecommerce.exception.ResourceNotFoundException;
+import com.victormoni.ecommerce.kafka.dto.OrderEvent;
+import com.victormoni.ecommerce.kafka.producer.KafkaProducerService;
 import com.victormoni.ecommerce.model.Product;
 import com.victormoni.ecommerce.model.User;
 import com.victormoni.ecommerce.repository.OrderRepository;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +36,8 @@ class OrderServiceTest {
     private ProductRepository productRepository;
     @Mock
     private UserService userService;
+    @Mock
+    private KafkaProducerService kafkaProducerService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
@@ -54,6 +59,7 @@ class OrderServiceTest {
 
         assertEquals(1, response.getItems().size());
         assertTrue(response.getTotal().compareTo(new BigDecimal("20.00")) == 0);
+        verify(kafkaProducerService, times(1)).sendOrderEvent(any(OrderEvent.class));
     }
 
     @Test

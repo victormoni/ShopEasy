@@ -4,6 +4,7 @@
  */
 package com.victormoni.ecommerce.controller;
 
+import com.victormoni.ecommerce.api.KafkaApi;
 import com.victormoni.ecommerce.kafka.dto.OrderEvent;
 import com.victormoni.ecommerce.kafka.producer.KafkaProducerService;
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/kafka")
-public class KafkaController {
+public class KafkaController implements KafkaApi{
 
     private final KafkaProducerService kafkaProducerService;
 
