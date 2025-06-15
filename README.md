@@ -169,7 +169,7 @@ echo "NAME                                 TYPE           CLUSTER-IP      EXTERN
 echo "ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m"
 ```
 
-### 5.4 Depois acesse no navegador: http://<'EXTERNAL-IP'>/"
+### 5.4 Depois acesse no navegador: http://EXTERNAL-IP/"
 
 Pegue o EXTERNAL-IP do comando anterior e troque pelo "localhost" nas URLs que vc for usar, lembre-se que dependendo da URL que for usar é necessário colocar a porta da URL:
 
