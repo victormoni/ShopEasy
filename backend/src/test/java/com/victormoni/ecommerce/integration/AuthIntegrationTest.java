@@ -60,7 +60,7 @@ public class AuthIntegrationTest {
                 register.setPassword("senha123");
                 register.setRole("USER");
 
-                mockMvc.perform(post("/auth/register")
+                mockMvc.perform(post("/api/auth/register")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(register)))
                                 .andExpect(status().isOk());
