@@ -30,3 +30,17 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui
+  namespace: loja-virtual
+spec:
+  selector:
+    app: kafka-ui
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
