@@ -12,16 +12,16 @@ Este repositório contém uma aplicação completa de **Loja Virtual**, composta
 
 ## 📚 Índice
 
-1. [Visão Geral](#visão-geral)
-2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
-3. [Estrutura de Pastas](#estrutura-de-pastas)
-4. [Execução com Docker Compose](#execução-com-docker-compose)
-5. [Execução com Kubernetes](#execução-com-kubernetes)
-6. [Testes](#testes)
-7. [Observabilidade (ELK, Prometheus, Actuator)](#observabilidade)
-8. [Configuração de Ambiente](#-configuração-de-ambiente)
-9. [Principais Endpoints da API](#principais-endpoints-da-api)
-10. [Considerações Finais](#considerações-finais)
+1. [💡 Visão Geral](#-visão-geral)
+2. [⚙️ Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+3. [📂 Estrutura de Pastas](#-estrutura-de-pastas)
+4. [🛠️ Execução com Docker Compose](#️-execução-com-docker-compose)
+5. [🚀 Execução com Kubernetes](#-execução-com-kubernetes)
+6. [🔧 Testes](#-testes)
+7. [📊 Observabilidade (ELK, Prometheus, Actuator)](#-observabilidade-elk-prometheus-actuator)
+8. [🏠 Configuração de Ambiente](#-configuração-de-ambiente)
+9. [💡 Principais Endpoints da API](#-principais-endpoints-da-api)
+10. [📖 Considerações Finais](#-considerações-finais)
 
 ---
 
@@ -120,8 +120,8 @@ docker compose logs -f
 
 - Frontend: [http://localhost:4200](http://localhost:4200)
 - Backend: [http://localhost:8080](http://localhost:8080)
-- MySQL: localhost:3306
-- Kafka: localhost:9092
+- MySQL: [localhost:3306](localhost:3306)
+- Kafka: [localhost:9092](localhost:9092)
 - Actuator: [http://localhost:8080/actuator](http://localhost:8080/actuator)
 - Swagger (OpenAPI): [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 - Kafka UI: [http://localhost:8085/](http://localhost:8085/)
@@ -170,13 +170,13 @@ echo "NAME                                 TYPE           CLUSTER-IP      EXTERN
 echo "ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m"
 ```
 
-### 5.4 Depois acesse no navegador: http://<EXTERNAL-IP>/"
+### 5.4 Depois acesse no navegador: http://<'EXTERNAL-IP'>/"
 
 Pegue o EXTERNAL-IP do comando anterior e troque pelo "localhost" nas URLs que vc for usar, lembre-se que dependendo da URL que for usar é necessário colocar a porta da URL:
 
 - Exemplo (Kibana):
 
-[http://192.168.49.2:5601/](http://192.168.49.2:5601/)
+[http://192.168.49.2:5601](http://192.168.49.2:5601)
 
 ---
 
@@ -297,7 +297,7 @@ export const environment = {
 ---
 
 Obrigado por usar a **Loja Virtual**!  
-Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/loja-virtual/issues) ou envie um PR.
+Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/loja-virtual/issues) ou envie um Pull Request.
 
 **Autor:** Victor Moni
 **Licença:** MIT License (consulte o arquivo [LICENSE](LICENSE) para mais detalhes)
