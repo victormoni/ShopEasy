@@ -3,7 +3,7 @@
 Este repositório contém uma aplicação completa de **Loja Virtual**, composta por:
 
 - **Frontend**: SPA em **Angular 19**, empacotada e servida por **NGINX**.
-- **Backend**: API RESTful em **Spring Boot 3.5.0** (Java 21), com integração com **Kafka**, **MySQL** e **Flyway**.
+- **Backend**: API RESTful em **Spring Boot 3.5.0** (Java 21), com integração com **Kafka** e **MySQL**.
 - **Banco de Dados**: **MySQL 8.0**.
 - **Mensageria**: **Apache Kafka** para eventos de pedidos.
 - **Infraestrutura**: **Docker Compose** para orquestração local e **Kubernetes (K8s)** para deploy em ambiente de nuvem ou cluster local.
@@ -19,7 +19,7 @@ Este repositório contém uma aplicação completa de **Loja Virtual**, composta
 5. [Execução com Kubernetes](#execução-com-kubernetes)
 6. [Testes](#testes)
 7. [Observabilidade (ELK, Prometheus, Actuator)](#observabilidade)
-8. [Configuração de Ambiente](#-configuração-de-ambiente)
+8. [Configuração de Ambiente](#configuração-de-ambiente)
 9. [Principais Endpoints da API](#principais-endpoints-da-api)
 10. [Considerações Finais](#considerações-finais)
 
@@ -70,7 +70,7 @@ O projeto tem como objetivo fornecer uma base completa para um sistema de e-comm
 ```
 loja-virtual/
 ├── backend/
-|   |── src/
+│   ├── src/
 │   ├── pom.xml
 │   └── Dockerfile
 ├── elk                 # Configuração do logstash
@@ -127,7 +127,6 @@ docker compose logs -f
 - Kafka UI: [http://localhost:8085/](http://localhost:8085/)
 - Kibana: [http://localhost:5601/](http://localhost:5601/)
 - H2 Database: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-- Jacoco: [file:///C:/<CAMINHO_ATÉ_O_DIRETÓRIO_DO_PROJETO>/loja-virtual/backend/target/site/jacoco/index.html](file:///C:/<caminho_do_projeto>/loja-virtual/backend/target/site/jacoco/index.html)
 
 ### 4.6 Parando os Containers
 
@@ -153,7 +152,7 @@ Execute o script minikube.sh pelo terminal como administrador na pasta raiz do p
 
 ### 5.2 Rode o minikube tunnel
 
-Execute o comando minikube tunnel em outro terminal como administrador para aloja funcionar, deixe o tunnel aberto enquanto estiver usando.
+Abra um novo terminal (como administrador) e execute o comando abaixo para criar o túnel de rede necessário. Deixe o túnel ativo enquanto utilizar a aplicação:
 
 ```bash
 minikube tunnel
@@ -166,8 +165,8 @@ minikube tunnel
 ```bash
 kubectl get svc -n ingress-nginx
 
-echo "NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE"
-echo "ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m"
+NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m
 ```
 
 ### 5.4 Depois acesse no navegador: http://<EXTERNAL-IP>/"
@@ -182,7 +181,9 @@ Pegue o EXTERNAL-IP do comando anterior e troque pelo "localhost" nas URLs que v
 
 ## 🔧 Testes
 
-### Backend:
+### 6.1 Visão Geral
+
+**Backend:**
 
 - Testes backend com JUnit 5 + Mockito
 - Testes de integração com banco H2
@@ -194,13 +195,55 @@ Executar:
 mvn clean verify -Dspring.profiles.active=test
 ```
 
-### Frontend:
+**Frontend:**
 
 - Testes frontend com Karma + Jasmine
 
 ```bash
 ng test
 ```
+
+### 6.1 Testes com H2
+
+Testes de integração backend com banco em memória H2
+Uso do profile test
+
+```bash
+mvn clean verify -Dspring.profiles.active=test
+```
+
+### 6.2 Testes com MySQL local + JaCoCo
+
+Caso deseje rodar os testes usando um banco MySQL local real (e não o H2), ideal para gerar o relatório de cobertura de código JaCoCo:
+
+✅ Pré-requisitos:
+
+- MySQL rodando localmente (localhost:3306)
+- Banco ecommerce criado
+
+Exemplo de configuração (application-test-mysql.properties):
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=1234
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.kafka.bootstrap-servers=localhost:9092
+```
+
+✅ Rodando os testes com JaCoCo:
+
+```bash
+mvn clean verify -Dspring.profiles.active=test-mysql
+```
+
+✅ Relatório JaCoCo:
+
+```bash
+backend/target/site/jacoco/index.html
+```
+
+Abra o arquivo no navegador para visualizar a cobertura de código.
 
 ---
 
