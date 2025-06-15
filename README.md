@@ -118,8 +118,6 @@ docker compose logs -f
 
 ### 4.5 Acesse a aplicação:
 
-- MySQL: [localhost:3306](localhost:3306)
-- Kafka: [localhost:9092](localhost:9092)
 - Frontend: [http://localhost:4200](http://localhost:4200)
 - Backend: [http://localhost:8080](http://localhost:8080)
 - Actuator: [http://localhost:8080/actuator](http://localhost:8080/actuator)
@@ -127,6 +125,8 @@ docker compose logs -f
 - Kafka UI: [http://localhost:8085/](http://localhost:8085/)
 - Kibana: [http://localhost:5601/](http://localhost:5601/)
 - H2 Database: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+- MySQL: [localhost:3306](localhost:3306)
+- Kafka: [localhost:9092](localhost:9092)
 
 ### 4.6 Parando os Containers
 
