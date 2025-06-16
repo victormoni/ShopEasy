@@ -1,0 +1,42 @@
+## YAML Template.
+---
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+      - org.springframework.boot.autoconfigure.kafka.KafkaStreamsAutoConfiguration
+
+  main:
+    allow-bean-definition-overriding: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      dialect: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    open-in-view: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+    listener:
+      auto-startup: false
+
+jwt:
+  secret: testeSegredoJwt12345678901234567890
+  access-token-expiration-ms: 3600000
+  refresh-token-expiration-ms: 86400000
+
+logging:
+  level:
+    org.springframework: ERROR

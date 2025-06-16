@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.controller;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.api.AuthApi;
 import com.victormoni.ecommerce.dto.response.AuthResponse;
 import com.victormoni.ecommerce.dto.request.LoginRequest;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author Victor Moni
  */
+
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")

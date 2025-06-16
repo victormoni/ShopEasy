@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.api;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.dto.request.LoginRequest;
 import com.victormoni.ecommerce.dto.request.RefreshRequest;
 import com.victormoni.ecommerce.dto.request.RegisterRequest;
@@ -20,10 +21,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 @Tag(name = "Autenticação", description = "Endpoints de login, registro e tokens JWT")
 public interface AuthApi {
 
