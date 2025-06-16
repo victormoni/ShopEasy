@@ -4,9 +4,11 @@ package com.victormoni.ecommerce.integration;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.victormoni.ecommerce.dto.request.OrderItemRequest;
 import com.victormoni.ecommerce.dto.request.OrderRequest;
+import com.victormoni.ecommerce.kafka.dto.OrderEvent;
 import com.victormoni.ecommerce.model.Product;
 import com.victormoni.ecommerce.model.Role;
 import com.victormoni.ecommerce.model.User;
@@ -17,20 +19,32 @@ import com.victormoni.ecommerce.security.CustomUserDetails;
 import com.victormoni.ecommerce.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/*
+ * @author Victor Moni
+ */
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class OrderIntegrationTest {
 
         @Autowired
@@ -49,6 +63,18 @@ class OrderIntegrationTest {
         private JwtUtil jwtUtil;
 
         private String token;
+
+        @TestConfiguration
+        static class KafkaStubConfig {
+
+                @SuppressWarnings("unchecked")
+                @Bean
+                @Primary
+                public KafkaTemplate<String, OrderEvent> kafkaTemplate() {
+                        return (KafkaTemplate<String, OrderEvent>) Mockito.mock(KafkaTemplate.class);
+
+                }
+        }
 
         @BeforeEach
         void setUp() {
@@ -90,6 +116,7 @@ class OrderIntegrationTest {
                                 .header("Authorization", "Bearer " + token)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(orderRequest)))
+                                .andDo(MockMvcResultHandlers.print())
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.total").value(100.0))
                                 .andExpect(jsonPath("$.items[0].quantity").value(2));

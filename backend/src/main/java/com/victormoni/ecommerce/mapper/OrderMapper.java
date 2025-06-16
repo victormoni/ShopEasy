@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.mapper;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.dto.request.OrderRequest;
 import com.victormoni.ecommerce.dto.response.OrderItemResponse;
 import com.victormoni.ecommerce.dto.response.OrderResponse;
@@ -19,10 +20,10 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderMapper {
 

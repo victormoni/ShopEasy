@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.api;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.dto.request.OrderRequest;
 import com.victormoni.ecommerce.dto.response.OrderResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,10 +33,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestParam;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 @Tag(name = "Pedidos", description = "Operações de gerenciamento de pedidos")
 @RequestMapping("/api/orders")
 public interface OrderApi {

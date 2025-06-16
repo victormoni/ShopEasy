@@ -62,6 +62,7 @@ for file in "$K8S_DIR"/*.yaml; do
   kubectl apply -f "$file"
 done
 
+echo ""
 echo "📊  Abrindo o Dashboard..."
 minikube dashboard &
 echo "🎉  Cluster pronto! Loja virtual com Ingress, Dashboard e Métricas rodando 🚀"

@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.service;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.dto.request.ProductRequest;
 import com.victormoni.ecommerce.exception.ResourceNotFoundException;
 import com.victormoni.ecommerce.model.Product;
@@ -19,10 +20,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 

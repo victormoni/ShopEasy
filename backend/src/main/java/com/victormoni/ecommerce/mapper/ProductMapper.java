@@ -4,16 +4,17 @@ package com.victormoni.ecommerce.mapper;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.victormoni.ecommerce.dto.request.ProductRequest;
 import com.victormoni.ecommerce.dto.response.ProductResponse;
 import com.victormoni.ecommerce.model.Product;
 import com.victormoni.ecommerce.util.FormatUtil;
 import java.util.Objects;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 public class ProductMapper {
 
     public static Product toEntity(ProductRequest dto) {
