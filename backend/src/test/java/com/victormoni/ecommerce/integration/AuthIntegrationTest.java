@@ -4,6 +4,7 @@ package com.victormoni.ecommerce.integration;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.victormoni.ecommerce.dto.request.LoginRequest;
 import com.victormoni.ecommerce.dto.request.RegisterRequest;
@@ -17,18 +18,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@ActiveProfiles("test")
 public class AuthIntegrationTest {
 
         @Autowired

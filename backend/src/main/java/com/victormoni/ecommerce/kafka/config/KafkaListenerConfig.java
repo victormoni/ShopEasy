@@ -1,12 +1,14 @@
+package com.victormoni.ecommerce.kafka.config;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.victormoni.ecommerce.kafka.config;
 
 import com.victormoni.ecommerce.kafka.dto.OrderEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -14,12 +16,13 @@ import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
 
-/**
- *
+/*
  * @author Victor Moni
  */
+
 @EnableKafka
 @Configuration
+@Profile("!test")
 public class KafkaListenerConfig {
 
     @Bean
