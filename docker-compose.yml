@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: mysql
     environment:
-      MYSQL_DATABASE: ecommerce
+      MYSQL_DATABASE: shopeasy
       MYSQL_ROOT_PASSWORD: "1234"
     ports:
       - "3306:3306"

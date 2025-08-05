@@ -5,9 +5,9 @@ spring:
     name: backend
 
   datasource:
-    url: jdbc:mysql://mysql:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000
@@ -54,7 +54,7 @@ management:
       enabled: true
 
 jwt:
-  secret: minhaChaveSuperSecreta32Chars!123456
+  secret: ${JWT_SECRET}
   access-token-expiration-ms: 86400000
   refresh-token-expiration-ms: 604800000
 
