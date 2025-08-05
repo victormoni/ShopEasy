@@ -4,6 +4,10 @@ spring:
   application:
     name: backend
 
+  # url: jdbc:mysql://mysql:3306/ecommerce
+  # username: root
+  # password: 1234
+
   datasource:
     url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${MYSQLUSER}
@@ -52,6 +56,8 @@ management:
       show-details: always
     prometheus:
       enabled: true
+
+#minhaChaveSuperSecreta32Chars!123456
 
 jwt:
   secret: ${JWT_SECRET}
