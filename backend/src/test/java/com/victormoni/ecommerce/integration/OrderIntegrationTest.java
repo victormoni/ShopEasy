@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.integration;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.victormoni.ecommerce.dto.request.OrderItemRequest;
 import com.victormoni.ecommerce.dto.request.OrderRequest;
@@ -38,9 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/*
- * @author Victor Moni
- */
 
 @SpringBootTest
 @AutoConfigureMockMvc

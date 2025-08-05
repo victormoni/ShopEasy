@@ -16,6 +16,8 @@ spring:
   jpa:
     show-sql: true
     open-in-view: false
+    hibernate:
+      ddl-auto: update
 
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}

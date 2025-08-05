@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.controller;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.victormoni.ecommerce.api.ProductApi;
 import com.victormoni.ecommerce.dto.request.ProductRequest;
 import com.victormoni.ecommerce.dto.response.ProductResponse;
@@ -18,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-/*
- * @author Victor Moni
- */
 
 @Slf4j
 @RestController

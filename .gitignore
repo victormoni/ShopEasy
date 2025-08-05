@@ -1,0 +1,75 @@
+# ========================
+# GERAL
+# ========================
+# IDEs e sistemas operacionais
+.idea/
+.vscode/
+*.swp
+*.swo
+*.iml
+*.log
+.DS_Store
+Thumbs.db
+
+# ========================
+# BACKEND - JAVA (Spring Boot)
+# ========================
+/backend/target/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/*.iml
+
+# Maven
+/backend/pom.xml.tag
+/backend/pom.xml.releaseBackup
+/backend/pom.xml.versionsBackup
+/backend/pom.xml.next
+/backend/release.properties
+/backend/buildNumber.properties
+/backend/.mvn/timing.properties
+
+# Gradle
+/backend/.gradle/
+/backend/build/
+/backend/gradle-app.setting
+/backend/gradlew
+/backend/gradlew.bat
+/backend/gradle/wrapper/gradle-wrapper.jar
+
+# Configurações locais e segredos
+/backend/application-local.properties
+/backend/application-dev.properties
+/backend/application-prod.properties
+/backend/.env
+/backend/*.env
+
+# ========================
+# FRONTEND - ANGULAR
+# ========================
+/frontend/node_modules/
+/frontend/dist/
+/frontend/tmp/
+/frontend/.angular/cache/
+/frontend/.env
+/frontend/*.env
+/frontend/.env.local
+/frontend/.env.*.local
+
+# Test coverage
+/frontend/coverage/
+
+# ========================
+# GERAL - ARQUIVOS DE BUILD E ENV
+# ========================
+.env
+.env.*
+!.env.example
+
+# ========================
+# Arquivos de sistema
+# ========================
+*.bak
+*.tmp
+*.temp
+~$*

@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.api;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.victormoni.ecommerce.dto.request.RegisterRequest;
 import com.victormoni.ecommerce.dto.request.UpdateUserRequest;
 import com.victormoni.ecommerce.dto.response.SuccessResponse;
@@ -31,11 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-/**
- *
- * @author Victor Moni
- */
 
 @Tag(name = "Usuários", description = "Gerenciamento de usuários")
 @RequestMapping("/api/users")

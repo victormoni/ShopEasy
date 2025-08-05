@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.service;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.victormoni.ecommerce.dto.request.LoginRequest;
 import com.victormoni.ecommerce.dto.request.RefreshRequest;
 import com.victormoni.ecommerce.dto.request.RegisterRequest;
@@ -33,10 +28,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-/*
- * @author Victor Moni
- */
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {

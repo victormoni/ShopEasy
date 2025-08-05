@@ -1,0 +1,35 @@
+# Maven
+target
+*.log
+*.mvn
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+build
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDEs
+.idea
+.vscode
+*.iml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Configurações locais
+*.env
+.env
+application-local.properties
+application-dev.properties
+application-test.properties
+application-prod.properties
+
+# Arquivos temporários e de backup
+*.swp
+*.swo
+*.bak
+*.tmp
+*.temp
+~$*

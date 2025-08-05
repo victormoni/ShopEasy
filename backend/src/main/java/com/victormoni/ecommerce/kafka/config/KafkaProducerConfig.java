@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.kafka.config;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.victormoni.ecommerce.kafka.dto.OrderEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +12,6 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-
-/*
- * @author Victor Moni
- */
 
 @Configuration
 public class KafkaProducerConfig {

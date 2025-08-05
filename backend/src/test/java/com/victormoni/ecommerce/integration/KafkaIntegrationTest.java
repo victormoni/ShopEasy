@@ -1,10 +1,5 @@
 package com.victormoni.ecommerce.integration;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 import com.victormoni.ecommerce.kafka.dto.OrderEvent;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
@@ -14,15 +9,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 
-/*
- * @author Victor Moni
- */
-
 @SpringBootTest
 @ActiveProfiles("test")
 @EmbeddedKafka(partitions = 1, topics = "order-events")
 public class KafkaIntegrationTest {
-    
+
     @Autowired
     private KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
