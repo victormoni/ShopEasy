@@ -4,14 +4,10 @@ spring:
   application:
     name: backend
 
-  # url: jdbc:mysql://mysql:3306/ecommerce
-  # username: root
-  # password: 1234
-
   datasource:
-    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: ${MYSQLUSER}
-    password: ${MYSQLPASSWORD}
+    url: jdbc:mysql://mysql:3306/shopeasy?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000
@@ -27,13 +23,13 @@ spring:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
 
     consumer:
-      group-id: ecommerce-group
+      group-id: shopeasy-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
       properties:
-        spring.json.trusted.packages: com.victormoni.ecommerce.kafka.dto
+        spring.json.trusted.packages: com.shopeasy.ecommerce.kafka.dto
         session.timeout.ms: 15000
         heartbeat.interval.ms: 3000
 
@@ -57,10 +53,8 @@ management:
     prometheus:
       enabled: true
 
-#minhaChaveSuperSecreta32Chars!123456
-
 jwt:
-  secret: ${JWT_SECRET}
+  secret: minhaChaveSuperSecreta32Chars!123456
   access-token-expiration-ms: 86400000
   refresh-token-expiration-ms: 604800000
 
