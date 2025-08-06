@@ -1,4 +1,4 @@
-# Loja Virtual
+# ShopEasy
 
 Este repositório contém uma aplicação simples de **Loja Virtual**, composta por:
 
