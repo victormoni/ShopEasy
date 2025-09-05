@@ -4,7 +4,7 @@ K8S_DIR="./k8s"
 NAMESPACE_FILE="$K8S_DIR/namespace.yaml"
 DEPLOY_FILE="$K8S_DIR/deploy.yaml"
 MEMORY="4000"
-CPUS="4"
+CPUS="3"
 USER_DRIVER=$1
 VM_DRIVER=""
 
