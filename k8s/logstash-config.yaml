@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: logstash-config
-  namespace: loja-virtual
+  namespace: shopeasy
 data:
   logstash.conf: |
     input {

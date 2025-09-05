@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: loja-virtual
+  namespace: shopeasy
 spec:
   replicas: 1
   selector:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: victormoni/loja-virtual-frontend:latest
+          image: victormoni/shopeasy-frontend:latest
           ports:
             - containerPort: 80
           resources:
@@ -42,7 +42,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
-  namespace: loja-virtual
+  namespace: shopeasy
 spec:
   selector:
     app: frontend

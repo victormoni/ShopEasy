@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: loja-virtual-ingress
-  namespace: loja-virtual
+  name: shopeasy-ingress
+  namespace: shopeasy
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:

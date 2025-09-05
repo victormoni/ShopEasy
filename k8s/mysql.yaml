@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
-  namespace: loja-virtual
+  namespace: shopeasy
 spec:
   replicas: 1
   selector:
@@ -20,7 +20,7 @@ spec:
             - containerPort: 3306
           env:
             - name: MYSQL_DATABASE
-              value: ecommerce
+              value: shopeasy
             - name: MYSQL_ROOT_PASSWORD
               value: "1234"
           resources:
@@ -52,7 +52,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: loja-virtual
+  namespace: shopeasy
 spec:
   selector:
     app: mysql
@@ -66,7 +66,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
-  namespace: loja-virtual
+  namespace: shopeasy
 spec:
   accessModes:
     - ReadWriteOnce
