@@ -22,7 +22,10 @@ spec:
             - name: MYSQL_DATABASE
               value: shopeasy
             - name: MYSQL_ROOT_PASSWORD
-              value: "1234"
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
           resources:
             requests:
               memory: "512Mi"
@@ -34,15 +37,25 @@ spec:
             - name: mysql-storage
               mountPath: /var/lib/mysql
           readinessProbe:
-            tcpSocket:
-              port: 3306
-            initialDelaySeconds: 10
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"
+            initialDelaySeconds: 20
             periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 12
           livenessProbe:
-            tcpSocket:
-              port: 3306
-            initialDelaySeconds: 30
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD"
+            initialDelaySeconds: 60
             periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
@@ -70,6 +83,16 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: standard
   resources:
     requests:
       storage: 2Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: shopeasy
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: "1234"
