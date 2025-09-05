@@ -94,10 +94,17 @@ git clone https://github.com/victormoni/ShopEasy.git
 cd ShopEasy
 ```
 
-### Suba todos os serviços em modo destacado (detached mode):
+### Dê npm install na pasta frontend:
 
 ```bash
-docker compose up -d
+cd frontend
+npm i
+```
+
+### Suba todos os serviços em modo destacado (detached mode) e faça build:
+
+```bash
+docker compose up -d --build
 ```
 
 ### Acesse a aplicação:
@@ -177,7 +184,7 @@ ng test
 
 ---
 
-Obrigado por usar a **ShopEasy**!  
+Obrigado por usar a **ShopEasy**!
 Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/ShopEasy/issues) ou envie um Pull Request.
 
 **Autor:** Victor Moni
