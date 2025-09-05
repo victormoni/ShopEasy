@@ -3,7 +3,7 @@
 K8S_DIR="./k8s"
 NAMESPACE_FILE="$K8S_DIR/namespace.yaml"
 DEPLOY_FILE="$K8S_DIR/deploy.yaml"
-MEMORY="6000"
+MEMORY="4000"
 CPUS="4"
 USER_DRIVER=$1
 VM_DRIVER=""
@@ -15,7 +15,7 @@ if [[ -n "$USER_DRIVER" ]]; then
     echo "❌ Driver inválido: '$USER_DRIVER'. Use 'hyperv' ou 'docker'."
     exit 1
   fi
-fi  
+fi
 
 echo "🚀  Iniciando Minikube com driver $VM_DRIVER..."
 minikube start --driver=$VM_DRIVER --memory=${MEMORY} --cpus=${CPUS}
@@ -73,7 +73,7 @@ echo "👉  minikube tunnel"
 echo "⚠️  Deixe o tunnel aberto enquanto estiver usando."
 
 echo ""
-echo "🌐  Descubra o EXTERNAL-IP do Ingress NGINX com o comando:" 
+echo "🌐  Descubra o EXTERNAL-IP do Ingress NGINX com o comando:"
 echo "👉  kubectl get svc -n ingress-nginx"
 echo ""
 echo "NAME                                 TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE"

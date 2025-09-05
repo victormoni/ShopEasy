@@ -1,40 +1,41 @@
 # ShopEasy
 
-Este repositório contém uma aplicação simples de **Loja Virtual**, composta por:
+This repository contains a simple **E-commerce Application**, composed of:
 
-- **Frontend**: SPA em **Angular 20**, empacotada e servida por **NGINX**.
-- **Backend**: API RESTful em **Spring Boot 3.5.0** (Java 21).
-- **Banco de Dados**: **MySQL 8.0**.
-- **Mensageria**: **Apache Kafka** para eventos de pedidos.
-- **Infraestrutura**: **Docker Compose** para orquestração local e **Kubernetes (K8s)** para deploy em ambiente de nuvem ou cluster local.
-
----
-
-## 📚 Índice
-
-1. [Visão Geral](#-visão-geral)
-2. [Tecnologias Utilizadas](#️-tecnologias-utilizadas)
-3. [Estrutura de Pastas](#-estrutura-de-pastas)
-4. [Execução com Docker Compose](#️-execução-com-docker-compose)
-5. [Execução com Kubernetes](#-execução-com-kubernetes)
-6. [Testes](#-testes)
-7. [Considerações Finais](#-considerações-finais)
+- **Frontend**: SPA in **Angular 20**, packaged and served by **NGINX**.
+- **Backend**: RESTful API in **Spring Boot 3.5.0** (Java 21).
+- **Database**: **MySQL 8.0**.
+- **Messaging**: **Apache Kafka** for order events.
+- **Infrastructure**: **Docker Compose** for local orchestration and **Kubernetes (K8s)** for deployment in cloud or local clusters.
 
 ---
 
-## 💡 Visão Geral
+## 📚 Table of Contents
 
-O projeto tem como objetivo fornecer uma base completa para um sistema de e-commerce com:
-
-- Autenticação JWT
-- CRUD de usuários, produtos e pedidos
-- Eventos Kafka para processar pedidos
-- Observabilidade via Spring Actuator
-- Deploy local com Docker Compose ou em cluster com Kubernetes
+1. [Overview](#-overview)
+2. [Technologies Used](#️-technologies-used)
+3. [Folder Structure](#-folder-structure)
+4. [Push Images to DockerHub](#-push-images-to-dockerhub)
+5. [Run with Docker Compose](#️-run-with-docker-compose)
+6. [Run with Kubernetes](#-run-with-kubernetes)
+7. [Tests](#-tests)
+8. [Final Considerations](#-final-considerations)
 
 ---
 
-## ⚙️ Tecnologias Utilizadas
+## 💡 Overview
+
+The project aims to provide a complete foundation for an e-commerce system with:
+
+- JWT Authentication
+- CRUD for users, products, and orders
+- Kafka events for order processing
+- Observability via Spring Actuator
+- Local deployment with Docker Compose or in cluster with Kubernetes
+
+---
+
+## ⚙️ Technologies Used
 
 ### Backend
 
@@ -44,7 +45,7 @@ O projeto tem como objetivo fornecer uma base completa para um sistema de e-comm
 - Spring Data JPA
 - Apache Kafka
 - MySQL
-- JUnit 5 e Mockito (testes)
+- JUnit 5 and Mockito (tests)
 
 ### Frontend
 
@@ -53,7 +54,7 @@ O projeto tem como objetivo fornecer uma base completa para um sistema de e-comm
 - Karma / Jasmine
 - JWT
 
-### Infraestrutura
+### Infrastructure
 
 - Docker
 - Docker Compose
@@ -62,7 +63,7 @@ O projeto tem como objetivo fornecer uma base completa para um sistema de e-comm
 
 ---
 
-## 📂 Estrutura de Pastas
+## 📂 Folder Structure
 
 ```
 ShopEasy/
@@ -70,44 +71,79 @@ ShopEasy/
 |   |── src/
 │   ├── pom.xml
 │   └── Dockerfile
-├── elk                 # Configuração do logstash
+├── elk                 # Logstash configuration
 ├── frontend/
 |   ├── src/
 │   ├── package.json
 │   └── Dockerfile
 ├── k8s/
 ├── .gitignore
-├── docker-compose.yml  # Manifests do Kubernetes
+├── docker-compose.yml  # Kubernetes manifests
 ├── LICENSE             # MIT LICENSE
-├── minikube.sh         # Script para rodar o minikube
+├── minikube.sh         # Script to run minikube
 └── README.md
 ```
 
 ---
 
-## 🛠️ Execução com Docker Compose
+## 🐋 Push Images to DockerHub
 
-### Clone o repositório:
+### Log in to Docker Hub
+
+First, authenticate in the terminal:
+
+```bash
+docker login
+```
+
+### Build the images
+
+In the frontend directory:
+
+```bash
+docker build -t your-username/shopeasy-frontend:latest .
+```
+
+In the backend directory:
+
+```bash
+docker build -t your-username/shopeasy-backend:latest .
+```
+
+### Push to Docker Hub
+
+After logging in and building the images:
+
+```bash
+docker push your-username/shopeasy-frontend:latest
+docker push your-username/shopeasy-backend:latest
+```
+
+---
+
+## 🛠️ Run with Docker Compose
+
+### Clone the repository:
 
 ```bash
 git clone https://github.com/victormoni/ShopEasy.git
 cd ShopEasy
 ```
 
-### Dê npm install na pasta frontend:
+### Run npm install in the frontend folder:
 
 ```bash
 cd frontend
 npm i
 ```
 
-### Suba todos os serviços em modo destacado (detached mode) e faça build:
+### Start all services in detached mode and build:
 
 ```bash
 docker compose up -d --build
 ```
 
-### Acesse a aplicação:
+### Access the application:
 
 - Frontend: [http://localhost](http://localhost)
 - Actuator: [http://localhost:8080/actuator](http://localhost:8080/actuator)
@@ -117,7 +153,7 @@ docker compose up -d --build
 - H2 Database: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 - MySQL: [localhost:3306](localhost:3306)
 
-### Parando os Containers
+### Stopping the Containers
 
 ```bash
 docker compose down
@@ -125,36 +161,36 @@ docker compose down
 
 ---
 
-## 🚀 Execução com Kubernetes
+## 🚀 Run with Kubernetes
 
-### Abra o aplicativo com o VSCode em modo Administrador
+### Open the project with VSCode as Administrator
 
-Faça o downdoad do VSCode e com botão direito do mouse abra ele em modo administrador, depois abra a pasta do projeto.
+Download VSCode and right-click to open it as administrator, then open the project folder.
 
 [VSCode Download](https://code.visualstudio.com/download)
 
-### Subir infraestrutura
+### Start infrastructure
 
-Execute o script minikube.sh selecionando qual tipo de driver você quer utilizar (HyperV ou Docker):
+Run the minikube.sh script selecting the type of driver you want to use (HyperV or Docker):
 
 ```bash
 ./minikube.sh hyperv
 ```
-ou
+or
 
 ```bash
 ./minikube.sh docker
 ```
 
-### Rode o minikube tunnel
+### Run minikube tunnel
 
-Execute o comando minikube tunnel em outro terminal como administrador para a loja funcionar, deixe o tunnel aberto enquanto estiver usando.
+Run the minikube tunnel command in another terminal as administrator for the store to work, keep the tunnel open while using it.
 
 ```bash
 minikube tunnel
 ```
 
-### Descubra o EXTERNAL-IP e do Ingress NGINX com o comando abaixo:
+### Get the EXTERNAL-IP of the Ingress NGINX with the command below:
 
 ```bash
 kubectl get svc -n ingress-nginx
@@ -163,23 +199,23 @@ echo "NAME                                 TYPE           CLUSTER-IP      EXTERN
 echo "ingress-nginx-controller             LoadBalancer   10.109.168.86   192.168.49.2    80:31945/TCP,443:31383/TCP   5m"
 ```
 
-### Depois acesse no navegador: http://EXTERNAL-IP/"
+### Then access in the browser: http://EXTERNAL-IP/"
 
-Pegue o EXTERNAL-IP do comando anterior e troque pelo "localhost" nas URLs que vc for usar, lembre-se que dependendo da URL que for usar é necessário colocar a porta da URL:
+Take the EXTERNAL-IP from the previous command and replace "localhost" in the URLs you want to use, remember that depending on the URL you may need to include the port:
 
-- Exemplo:
+- Example:
 
 [http://192.168.49.2:5601](http://192.168.49.2:5601)
 
 ---
 
-## 🔧 Testes
+## 🔧 Tests
 
 ### Backend
 
-- Testes backend com JUnit 5 + Mockito
-- Testes de integração com banco H2
-- Uso do Jacoco para Cobertura de Código
+- Backend tests with JUnit 5 + Mockito
+- Integration tests with H2 database
+- Using Jacoco for Code Coverage
 
 ```bash
 mvn clean verify
@@ -187,7 +223,7 @@ mvn clean verify
 
 ### Frontend:
 
-- Testes frontend com Karma + Jasmine
+- Frontend tests with Karma + Jasmine
 
 ```bash
 ng test
@@ -195,8 +231,8 @@ ng test
 
 ---
 
-Obrigado por usar a **ShopEasy**!
-Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/victormoni/ShopEasy/issues) ou envie um Pull Request.
+Thank you for using **ShopEasy**!
+If you have any questions or suggestions, open an [issue](https://github.com/victormoni/ShopEasy/issues) or submit a Pull Request.
 
-**Autor:** Victor Moni
-**Licença:** MIT License (consulte o arquivo [LICENSE](LICENSE) para mais detalhes)
+**Author:** Victor Moni  
+**License:** MIT License (see the [LICENSE](LICENSE) file for more details)
