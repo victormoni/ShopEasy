@@ -5,7 +5,7 @@ spring:
     name: backend
 
   datasource:
-    url: jdbc:mysql://mysql:3306/shopeasy?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql:3306/shopeasy?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
