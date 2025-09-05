@@ -127,12 +127,23 @@ docker compose down
 
 ## 🚀 Execução com Kubernetes
 
+### Abra o aplicativo com o VSCode em modo Administrador
+
+Faça o downdoad do VSCode e com botão direito do mouse abra ele em modo administrador, depois abra a pasta do projeto.
+
+[VSCode Download](https://code.visualstudio.com/download)
+
 ### Subir infraestrutura
 
-Execute o script minikube.sh pelo terminal como administrador na pasta raiz do projeto:
+Execute o script minikube.sh selecionando qual tipo de driver você quer utilizar (HyperV ou Docker):
 
 ```bash
-./minikube.sh
+./minikube.sh hyperv
+```
+ou
+
+```bash
+./minikube.sh docker
 ```
 
 ### Rode o minikube tunnel
